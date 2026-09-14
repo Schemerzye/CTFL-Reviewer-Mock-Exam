@@ -1,0 +1,752 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISTQB CTFL v4.0 Mock Exam</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#2563eb;--primary-dark:#1d4ed8;--success:#16a34a;--danger:#dc2626;--warning:#f59e0b;--bg:#f8fafc;--card:#fff;--text:#1e293b;--text-light:#64748b;--border:#e2e8f0;--shadow:0 4px 6px -1px rgb(0 0 0/.1),0 2px 4px -2px rgb(0 0 0/.1)}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:960px;margin:0 auto;padding:1rem}
+#landing{text-align:center;padding:3rem 1rem}
+#landing h1{font-size:2.2rem;margin-bottom:.5rem;color:var(--primary)}
+#landing .subtitle{color:var(--text-light);font-size:1.1rem;margin-bottom:2rem}
+.info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:2rem 0}
+.info-card{background:var(--card);border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);text-align:center}
+.info-card h3{font-size:1.5rem;color:var(--primary)}
+.info-card p{color:var(--text-light);font-size:.9rem}
+.btn{display:inline-block;padding:.75rem 2rem;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-success{background:var(--success);color:#fff}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-outline{background:transparent;border:2px solid var(--primary);color:var(--primary)}
+.btn-outline:hover{background:var(--primary);color:#fff}
+.btn-sm{padding:.5rem 1rem;font-size:.85rem}
+#exam{display:none}
+#exam-header{display:flex;justify-content:space-between;align-items:center;padding:1rem;background:var(--card);border-radius:12px;box-shadow:var(--shadow);margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+#timer{font-size:1.3rem;font-weight:700;color:var(--danger)}
+#timer.warning{animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.5}}
+#progress{font-size:.9rem;color:var(--text-light)}
+#question-area{background:var(--card);border-radius:12px;padding:2rem;box-shadow:var(--shadow);margin-bottom:1rem}
+#question-text{font-size:1.15rem;font-weight:600;margin-bottom:1.5rem}
+.options label{display:block;padding:1rem;margin-bottom:.75rem;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s;font-size:1rem}
+.options label:hover{border-color:var(--primary);background:#eff6ff}
+.options input[type=radio]{margin-right:.75rem;accent-color:var(--primary)}
+.options label.selected{border-color:var(--primary);background:#dbeafe}
+#nav-buttons{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
+#palette-toggle{background:none;border:1px solid var(--border);padding:.5rem 1rem;border-radius:8px;cursor:pointer;font-size:.9rem}
+#palette-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;justify-content:center;align-items:flex-end}
+#palette-overlay.show{display:flex}
+#palette{background:var(--card);border-radius:16px 16px 0 0;padding:1.5rem;width:100%;max-height:70vh;overflow-y:auto}
+#palette h3{text-align:center;margin-bottom:1rem}
+.palette-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:.5rem;margin-bottom:1rem}
+.palette-btn{width:100%;aspect-ratio:1;border:2px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer;font-weight:600;font-size:.85rem;transition:all .2s}
+.palette-btn.answered{background:var(--primary);color:#fff;border-color:var(--primary)}
+.palette-btn.current{border-color:var(--warning);box-shadow:0 0 0 2px var(--warning)}
+.palette-legend{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;font-size:.8rem;color:var(--text-light)}
+#palette-close{display:block;margin:1rem auto 0;padding:.5rem 2rem}
+#results{display:none}
+#results h2{text-align:center;margin-bottom:1.5rem}
+.score-card{text-align:center;background:var(--card);border-radius:12px;padding:2rem;box-shadow:var(--shadow);margin-bottom:1.5rem}
+.score-big{font-size:3rem;font-weight:800;color:var(--primary)}
+.pass{color:var(--success)}.fail{color:var(--danger)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1rem;margin:1.5rem 0}
+.stat{background:var(--card);border-radius:8px;padding:1rem;box-shadow:var(--shadow);text-align:center}
+.stat .val{font-size:1.8rem;font-weight:700}.stat .lbl{font-size:.8rem;color:var(--text-light)}
+.filter-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;justify-content:center}
+.filter-tab{padding:.5rem 1.2rem;border:2px solid var(--border);border-radius:20px;background:var(--card);cursor:pointer;font-size:.85rem;font-weight:500;transition:all .2s}
+.filter-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.review-item{background:var(--card);border-radius:10px;padding:1.5rem;margin-bottom:1rem;box-shadow:var(--shadow);border-left:4px solid var(--border)}
+.review-item.correct{border-left-color:var(--success)}.review-item.incorrect{border-left-color:var(--danger)}.review-item.unanswered{border-left-color:var(--warning)}
+.review-q{font-weight:600;margin-bottom:.75rem}
+.review-options p{margin:.3rem 0;padding:.4rem .7rem;border-radius:4px}
+.review-options p.right{background:#dcfce7;font-weight:600}.review-options p.wrong{background:#fee2e2;text-decoration:line-through}.review-options p.missed{background:#fef3c7}
+.review-explanation{margin-top:.75rem;padding:.75rem;background:#f0f9ff;border-radius:6px;font-size:.9rem;color:var(--text-light)}
+.review-actions{display:flex;gap:1rem;justify-content:center;margin:2rem 0;flex-wrap:wrap}
+.history{background:var(--card);border-radius:12px;padding:1.5rem;box-shadow:var(--shadow);margin-top:1.5rem}
+.history h3{margin-bottom:1rem}
+.history-table{width:100%;border-collapse:collapse;font-size:.9rem}
+.history-table th,.history-table td{padding:.6rem .8rem;text-align:left;border-bottom:1px solid var(--border)}
+.history-table th{background:var(--bg);font-weight:600}
+@media(max-width:640px){.palette-grid{grid-template-columns:repeat(8,1fr)}#landing h1{font-size:1.5rem}.container{padding:.5rem}#question-area{padding:1.2rem}.info-cards{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+<div id="landing">
+<h1>ISTQB Certified Tester Foundation Level</h1>
+<p class="subtitle">v4.0 Mock Exam Practice</p>
+<div class="info-cards">
+<div class="info-card"><h3>60</h3><p>Questions per exam</p></div>
+<div class="info-card"><h3>60</h3><p>Minutes time limit</p></div>
+<div class="info-card"><h3>65%</h3><p>Passing score (39/60)</p></div>
+<div class="info-card"><h3>360+</h3><p>Question pool</p></div>
+</div>
+<button class="btn btn-primary" onclick="startExam()">Start Exam</button>
+</div>
+<div id="exam">
+<div id="exam-header">
+<div id="progress">Question 1 / 60</div>
+<div id="timer">60:00</div>
+<button id="palette-toggle" onclick="togglePalette()">Palette</button>
+</div>
+<div id="question-area">
+<div id="question-text"></div>
+<div class="options" id="options-container"></div>
+</div>
+<div id="nav-buttons">
+<button class="btn btn-outline btn-sm" onclick="prevQuestion()">Previous</button>
+<button class="btn btn-danger btn-sm" onclick="submitExam()">Submit Exam</button>
+<button class="btn btn-primary btn-sm" onclick="nextQuestion()">Next</button>
+</div>
+</div>
+<div id="palette-overlay" onclick="closePaletteOutside(event)">
+<div id="palette">
+<h3>Question Palette</h3>
+<div class="palette-grid" id="palette-grid"></div>
+<div class="palette-legend">
+<span><span style="display:inline-block;width:14px;height:14px;background:var(--primary);border-radius:3px;vertical-align:middle"></span> Answered</span>
+<span><span style="display:inline-block;width:14px;height:14px;background:#e2e8f0;border-radius:3px;vertical-align:middle"></span> Unanswered</span>
+<span><span style="display:inline-block;width:14px;height:14px;border:2px solid var(--warning);border-radius:3px;vertical-align:middle"></span> Current</span>
+</div>
+<button class="btn btn-outline btn-sm" id="palette-close" onclick="togglePalette()">Close</button>
+</div>
+</div>
+<div id="results">
+<h2>Exam Results</h2>
+<div class="score-card">
+<div class="score-big" id="score-display"></div>
+<p id="pass-display" style="font-size:1.2rem;margin-top:.5rem;font-weight:600"></p>
+</div>
+<div class="stats">
+<div class="stat"><div class="val" id="stat-correct" style="color:var(--success)">0</div><div class="lbl">Correct</div></div>
+<div class="stat"><div class="val" id="stat-incorrect" style="color:var(--danger)">0</div><div class="lbl">Incorrect</div></div>
+<div class="stat"><div class="val" id="stat-unanswered" style="color:var(--warning)">0</div><div class="lbl">Unanswered</div></div>
+<div class="stat"><div class="val" id="stat-time">0:00</div><div class="lbl">Time Used</div></div>
+</div>
+<div class="filter-tabs">
+<button class="filter-tab active" onclick="filterReview('all',this)">All (60)</button>
+<button class="filter-tab" onclick="filterReview('correct',this)">Correct</button>
+<button class="filter-tab" onclick="filterReview('incorrect',this)">Incorrect</button>
+<button class="filter-tab" onclick="filterReview('unanswered',this)">Unanswered</button>
+</div>
+<div id="review-list"></div>
+<div class="review-actions">
+<button class="btn btn-primary" onclick="retakeExam()">Retake Exam</button>
+<button class="btn btn-outline" onclick="showLanding()">Back to Home</button>
+</div>
+<div class="history"><h3>Score History</h3><div id="history-content"></div></div>
+</div>
+</div>
+<script>
+
+
+
+const QUESTION_BANK=[
+{id:1,ch:1,cn:"Fundamentals of Testing",q:"What is the primary purpose of testing software?",o:["To prove that the software has no defects","To find defects and gain information about the quality","To show that the software meets all requirements","To replace quality assurance activities"],c:1,ex:"Testing's primary purpose is to find defects and provide information about quality."},
+{id:2,ch:1,cn:"Fundamentals of Testing",q:"Which is a valid objective of testing?",o:["To check that the system is fully documented","To gain confidence that the system meets its requirements","To ensure no defects remain in the system","To complete all test cases"],c:1,ex:"One key objective is to gain confidence the system meets requirements."},
+{id:3,ch:1,cn:"Fundamentals of Testing",q:"Which statement about testing and debugging is TRUE?",o:["Testing and debugging are the same","Testing finds defects, debugging removes them","Testing shows presence of defects, debugging identifies causes","Debugging always follows testing immediately"],c:2,ex:"Testing reveals presence of defects; debugging identifies causes and fixes them."},
+{id:4,ch:1,cn:"Fundamentals of Testing",q:"Which is NOT a testing objective according to ISTQB?",o:["Evaluating work products","Gaining confidence in quality","Preventing defects from occurring","Verifying all requirements implemented"],c:2,ex:"Defect prevention is a QA activity, not a testing objective."},
+{id:5,ch:1,cn:"Fundamentals of Testing",q:"Which describes the fundamental test process?",o:["Test design only after implementation","Planning is one-time activity","Analysis and design are iterative and can overlap","Execution must follow implementation exactly"],c:2,ex:"Fundamental test process activities are iterative and can overlap."},
+{id:6,ch:1,cn:"Fundamentals of Testing",q:"What provides MOST useful quality info to stakeholders?",o:["List of all test cases executed","List of known defects and severity","Description of test environment","Total number of requirements"],c:1,ex:"Defect information helps stakeholders make informed decisions."},
+{id:7,ch:1,cn:"Fundamentals of Testing",q:"What is a risk of not enough testing?",o:["Software may be over-tested","Undiscovered defects may cause production failures","Test team may run out of cases","Dev team may become frustrated"],c:1,ex:"Insufficient testing risks undiscovered defects causing failures."},
+{id:8,ch:1,cn:"Fundamentals of Testing",q:"What is a test level?",o:["A specific type like performance testing","A group of test activities organized together","An individual test case","A phase of the SDLC"],c:1,ex:"A test level groups test activities, e.g., component, integration, system, acceptance."},
+{id:9,ch:1,cn:"Fundamentals of Testing",q:"Who decides what to test at the management level?",o:["Test manager","Project manager","Product owner","Developer"],c:0,ex:"The test manager decides what to test and coordinates activities."},
+{id:10,ch:1,cn:"Fundamentals of Testing",q:"Which is a non-functional quality characteristic?",o:["Correctness","Maintainability","Reliability","All of the above"],c:3,ex:"Reliability and maintainability are non-functional characteristics."},
+{id:11,ch:1,cn:"Fundamentals of Testing",q:"How does ISTQB define the testing process?",o:["V-Model only","Test levels and the test process","Agile Scrum only","The defect lifecycle"],c:1,ex:"ISTQB defines testing through test levels within the test process."},
+{id:12,ch:1,cn:"Fundamentals of Testing",q:"What is a defect?",o:["A failure observed by end user","A human action producing incorrect result","A deviation between expected and actual results","An error in requirements"],c:2,ex:"A defect is a deviation between expected and actual results."},
+{id:13,ch:1,cn:"Fundamentals of Testing",q:"What is a test strategy?",o:["Document with scope, approach, resources, schedule","Description of how test objectives will be achieved","Detailed description of a specific test","List of all test cases"],c:1,ex:"A test strategy describes how test objectives will be achieved."},
+{id:14,ch:1,cn:"Fundamentals of Testing",q:"Which is a valid test execution technique?",o:["Equivalence partitioning","Boundary value analysis","Exploratory testing","Decision table testing"],c:2,ex:"Exploratory testing is a test execution technique."},
+{id:15,ch:1,cn:"Fundamentals of Testing",q:"What is the primary purpose of regression testing?",o:["Test new functionality","Verify changes haven't adversely affected existing functionality","Validate user acceptance","Test system performance"],c:1,ex:"Regression testing verifies modifications haven't caused adverse effects."},
+{id:16,ch:1,cn:"Fundamentals of Testing",q:"What is a test condition?",o:["An item or event that can be verified","A set of test cases","The execution of a test","A defect found during testing"],c:0,ex:"A test condition is an item verifiable by one or more test cases."},
+{id:17,ch:1,cn:"Fundamentals of Testing",q:"Which about test independence is TRUE?",o:["Independent testers find fewer defects","They may find different defects than developers","They should replace developer testing","They don't need domain knowledge"],c:1,ex:"Independent testers provide different perspective finding different defect types."},
+{id:18,ch:1,cn:"Fundamentals of Testing",q:"Correct order of the fundamental test process?",o:["Design, Planning, Execution, Closure","Planning, Analysis, Design, Implementation, Execution, Closure","Execution, Design, Planning, Closure","Analysis, Planning, Design, Execution"],c:1,ex:"Correct order: planning, analysis, design, implementation, execution, closure."},
+{id:19,ch:1,cn:"Fundamentals of Testing",q:"Which is a testing-related quality characteristic?",o:["Security","Testability","Usability","Performance"],c:1,ex:"Testability makes a component easy to test."},
+{id:20,ch:1,cn:"Fundamentals of Testing",q:"Difference between verification and validation?",o:["They are the same","Verification checks requirements conformance; validation checks fitness for use","Verification is testing; validation is review","Verification occurs after validation"],c:1,ex:"Verification confirms product is built right; validation confirms right product is built."},
+{id:21,ch:1,cn:"Fundamentals of Testing",q:"What is the purpose of test closure?",o:["Writing new test cases","Analyzing whether test objects meet criteria","Executing test cases","Designing test strategy"],c:1,ex:"Test closure evaluates results, analyzes metrics, documents lessons learned."},
+{id:22,ch:1,cn:"Fundamentals of Testing",q:"System crashes entering negative number. This is:",o:["A test condition","A test case","A failure","A test procedure"],c:2,ex:"A failure is a deviation from expected delivery, service, or result."},
+{id:23,ch:1,cn:"Fundamentals of Testing",q:"What is a valid reason for test automation?",o:["Eliminate all human errors","Reduce repetitive manual work","Replace all manual testing","Ensure all defects are found"],c:1,ex:"Automation reduces repetitive work letting testers focus on complex activities."},
+{id:24,ch:1,cn:"Fundamentals of Testing",q:"What is a test plan?",o:["Spreadsheet with all test cases","Document defining scope, objectives, approach, schedule","List of defects found","The project budget"],c:1,ex:"A test plan documents scope, objectives, approach, resources, schedule."},
+{id:25,ch:1,cn:"Fundamentals of Testing",q:"What is the purpose of a test report?",o:["List all test cases written","Provide info about testing and quality to stakeholders","Store test data","Document test environment"],c:1,ex:"Test reports provide stakeholders info about progress and quality."},
+{id:26,ch:1,cn:"Fundamentals of Testing",q:"Which is good testing practice?",o:["Testing only at project end","Every dev activity has corresponding test activities","Testers start after coding","Testing only by developers"],c:1,ex:"Good practice involves test activities parallel with development."},
+{id:27,ch:1,cn:"Fundamentals of Testing",q:"What does ISTQB stand for?",o:["International Software Testing Qualifications Board","Institute of Software Testing and Quality Assurance","International Standards for Testing Quality and Benchmarking","Indian Software Testing Qualifications Board"],c:0,ex:"ISTQB is the International Software Testing Qualifications Board."},
+{id:28,ch:1,cn:"Fundamentals of Testing",q:"What is a 'test oracle'?",o:["Person deciding when to stop testing","Source of expected results for comparison","Tool for automated testing","A senior test manager"],c:1,ex:"A test oracle provides expected results for comparison with actual results."},
+{id:29,ch:1,cn:"Fundamentals of Testing",q:"What is 'equivalence partitioning'?",o:["Inputs divided into groups expected to behave the same","Method to calculate test case count","Technique to prioritize test cases","Way to manage test data"],c:0,ex:"Equivalence partitioning divides inputs into groups expected to behave the same."},
+{id:30,ch:1,cn:"Fundamentals of Testing",q:"What is the purpose of code reviews?",o:["Replace unit testing","Find defects early in lifecycle","Measure code execution performance","Document software architecture"],c:1,ex:"Code reviews find defects early when cheaper to fix."},
+{id:31,ch:1,cn:"Fundamentals of Testing",q:"Which is a valid test objective?",o:["Prove 100% defect-free software","Verify software meets requirements","Increase development speed","Reduce programmer count"],c:1,ex:"Valid objective: verify requirements and gain quality confidence."},
+{id:32,ch:1,cn:"Fundamentals of Testing",q:"What is the MAIN benefit of early testing?",o:["Ensures no later defects found","Defects found when cheaper to fix","Replaces later testing","Reduces documentation"],c:1,ex:"Early testing finds defects when significantly cheaper to fix."},
+{id:33,ch:1,cn:"Fundamentals of Testing",q:"Which is NOT an ISTQB testing principle?",o:["Exhaustive testing is impossible","Testing shows presence of defects","Testing proves absence of defects","Absence-of-errors fallacy"],c:2,ex:"Testing shows presence, NOT absence of defects."},
+{id:34,ch:1,cn:"Fundamentals of Testing",q:"What is the correct term for a problem causing failure?",o:["Risk","Requirement","Defect","Test case"],c:2,ex:"A defect (bug, fault, error) may cause failure when executed."},
+{id:35,ch:1,cn:"Fundamentals of Testing",q:"Which testing level focuses on interactions between integrated components?",o:["Component testing","Integration testing","System testing","Acceptance testing"],c:1,ex:"Integration testing focuses on interactions between integrated components."},
+{id:36,ch:1,cn:"Fundamentals of Testing",q:"Which quality characteristic can be verified by testing?",o:["Source code readability","Functional correctness","Developer productivity","Project budget adherence"],c:1,ex:"Functional correctness is verifiable through testing."},
+{id:37,ch:1,cn:"Fundamentals of Testing",q:"What is an exit criterion?",o:["Condition to decide when test level is complete","Last test case in suite","Defect severity level","Final project report"],c:0,ex:"Exit criteria are conditions to decide when testing is complete."},
+{id:38,ch:1,cn:"Fundamentals of Testing",q:"What is test coverage?",o:["% of requirements coded","Degree to which test object has been tested","Number of testers assigned","Budget allocated"],c:1,ex:"Test coverage measures degree of testing by test cases."},
+{id:39,ch:1,cn:"Fundamentals of Testing",q:"What does the V-Model illustrate?",o:["Testing phases only","Relationships between dev activities and test levels","Only applies to waterfall","Prohibits iterative development"],c:1,ex:"V-Model shows relationships between development phases and test levels."},
+{id:40,ch:1,cn:"Fundamentals of Testing",q:"Which is a functional test?",o:["Testing response time","Testing login accepts valid credentials","Testing concurrent users","Testing crash recovery"],c:1,ex:"Testing login with valid credentials is functional testing."},
+{id:41,ch:1,cn:"Fundamentals of Testing",q:"What is the purpose of a traceability matrix?",o:["Track defects through lifecycle","Map test cases to requirements for coverage","Schedule test activities","Document test environment"],c:1,ex:"A traceability matrix maps test cases to requirements."},
+{id:42,ch:1,cn:"Fundamentals of Testing",q:"What is a benefit of independent testing?",o:["Testers work faster","Brings objective perspective","Don't need requirement understanding","Always reduces costs"],c:1,ex:"Independent testing provides objective perspective separate from development."},
+{id:43,ch:1,cn:"Fundamentals of Testing",q:"Primary concern of software quality?",o:["Speed of development","Conformity to specified requirements","Number of features","Cost of development"],c:1,ex:"Quality is degree of conformity to requirements and fitness for purpose."},
+{id:44,ch:1,cn:"Fundamentals of Testing",q:"Which is an acceptance criterion?",o:["System responds within 3 seconds","Code has 90% unit test coverage","All test cases pass","Defect rate below 1 per KLOC"],c:0,ex:"Acceptance criteria are measurable conditions for acceptance."},
+{id:45,ch:1,cn:"Fundamentals of Testing",q:"What is 'testware'?",o:["Hardware for testing","All artifacts produced during testing","Test automation tools only","Test environment config"],c:1,ex:"Testware is all artifacts produced during the testing process."},
+{id:46,ch:1,cn:"Fundamentals of Testing",q:"MOST important factor for test completion criteria?",o:["Date testing started","Risk level and test objectives","Number of test cases available","Size of test team"],c:1,ex:"Completion criteria should be based on risk levels and test objectives."},
+{id:47,ch:1,cn:"Fundamentals of Testing",q:"Which validates system meets user needs?",o:["Component testing","Integration testing","Acceptance testing","Regression testing"],c:2,ex:"Acceptance testing validates system meets user needs and requirements."},
+{id:48,ch:1,cn:"Fundamentals of Testing",q:"What is a test harness?",o:["Hardware device for testing","Collection of test support components","Defect tracking tool","Documentation template"],c:1,ex:"A test harness is software and data to test a program."},
+{id:49,ch:1,cn:"Fundamentals of Testing",q:"Which principle says testing shows presence not absence?",o:["Exhaustive testing impossible","Absence-of-errors fallacy","Testing shows presence not absence","Defect clustering"],c:2,ex:"Testing demonstrates defects exist, not that software is defect-free."},
+{id:50,ch:1,cn:"Fundamentals of Testing",q:"Which is a non-functional test?",o:["Testing form validation","Testing security against attacks","Testing button click","Testing calculations"],c:1,ex:"Security testing is non-functional testing."},
+{id:51,ch:1,cn:"Fundamentals of Testing",q:"What is 'test closure'?",o:["Locking test data","Formal process of completing all test activities","Final step of writing test cases","Deadline for testing"],c:1,ex:"Test closure formally completes all test activities and documents lessons learned."},
+{id:52,ch:1,cn:"Fundamentals of Testing",q:"Which about test estimation is TRUE?",o:["Only based on test case count","Considers risk, complexity, team skills, constraints","Only based on lines of code","Only accounts for execution time"],c:1,ex:"Estimation considers risk, complexity, skills, and project constraints."},
+{id:53,ch:1,cn:"Fundamentals of Testing",q:"What is a defect lifecycle?",o:["Time to write test cases","Process of identifying, reporting, managing, resolving defects","Designing test strategies","The SDLC"],c:1,ex:"Defect lifecycle: identifying, reporting, triaging, fixing, verifying defects."},
+{id:54,ch:1,cn:"Fundamentals of Testing",q:"Which is risk-based testing?",o:["Testing every possible input","Prioritizing tests based on likelihood and impact","Testing in alphabetical order","Running same tests repeatedly"],c:1,ex:"Risk-based testing prioritizes based on likelihood and impact of defects."},
+{id:55,ch:1,cn:"Fundamentals of Testing",q:"Which is a key success factor?",o:["Using only automated testing","Good test design and adequate coverage","Smallest possible test team","Testing only at end"],c:1,ex:"Key factors: good test design, adequate coverage, early involvement."},
+{id:56,ch:1,cn:"Fundamentals of Testing",q:"What is 'test case prioritization'?",o:["Assigning unique IDs","Arranging test cases to meet objectives","Writing in specific format","Deciding who executes"],c:1,ex:"Prioritization arranges tests to optimize achievement of objectives."},
+{id:57,ch:1,cn:"Fundamentals of Testing",q:"Which testing is performed by end users?",o:["System testing","Integration testing","User acceptance testing","Regression testing"],c:2,ex:"UAT is performed by end users to verify requirements."},
+{id:58,ch:1,cn:"Fundamentals of Testing",q:"Which is a black-box technique?",o:["Statement testing","Branch testing","Equivalence partitioning","Path testing"],c:2,ex:"Equivalence partitioning is black-box based on inputs/outputs."},
+{id:59,ch:1,cn:"Fundamentals of Testing",q:"What is the purpose of IEEE 829?",o:["Define dev processes","Provide standard format for test documentation","Set hardware quality standards","Define programming languages"],c:1,ex:"IEEE 829 provides standard format for test documentation."},
+{id:60,ch:1,cn:"Fundamentals of Testing",q:"What is 'defect clustering'?",o:["Defects evenly distributed","Small number of components contain most defects","Defects only in production","More testers find more defects"],c:1,ex:"Pareto principle: small number of modules contain most defects."},
+{id:61,ch:1,cn:"Fundamentals of Testing",q:"What is a test scenario?",o:["Detailed step-by-step procedure","High-level description of what to test","Test environment config","List of test data"],c:1,ex:"A test scenario is a high-level description of what to be tested."},
+{id:62,ch:1,cn:"Fundamentals of Testing",q:"What is a risk of excessive testing?",o:["Too many defects found","Wasted resources and delayed delivery","Software too stable","Team more skilled"],c:1,ex:"Excessive testing wastes resources with diminishing returns."},
+{id:63,ch:1,cn:"Fundamentals of Testing",q:"Difference between test suite and test plan?",o:["They are identical","Suite is related test cases; plan documents approach","Suite is documentation; plan is execution","Suite is for unit testing"],c:1,ex:"A test suite is related test cases; a test plan documents the approach."},
+{id:64,ch:1,cn:"Fundamentals of Testing",q:"Which is TRUE about QA and testing?",o:["They are the same","Testing is a QA activity","QA is management-oriented; testing is product-oriented","QA replaces testing"],c:2,ex:"QA focuses on process improvement; testing focuses on product defects."},
+{id:65,ch:1,cn:"Fundamentals of Testing",q:"What does 'functional completeness' mean?",o:["All functions are tested","All specified functions implemented","Code is complete","All documents finalized"],c:1,ex:"Functional completeness means all specified functions are implemented."},
+{id:66,ch:1,cn:"Fundamentals of Testing",q:"Which is a valid test case type?",o:["Positive and negative","Long and short","Fast and slow","Large and small"],c:0,ex:"Test cases can be positive (valid inputs) or negative (invalid inputs)."},
+{id:67,ch:1,cn:"Fundamentals of Testing",q:"Primary purpose of smoke testing?",o:["Find all defects","Verify critical functions work after new build","Test UI thoroughly","Perform regression"],c:1,ex:"Smoke testing quickly verifies critical functions after a new build."},
+{id:68,ch:1,cn:"Fundamentals of Testing",q:"Which about exploratory testing is TRUE?",o:["Requires no documentation","Involves simultaneous learning, design, execution","Only for seniors","Replaces all other techniques"],c:1,ex:"Exploratory testing combines learning, design, and execution simultaneously."},
+{id:69,ch:1,cn:"Fundamentals of Testing",q:"What is 'test design' per ISTQB?",o:["Deciding what to test","Transforming test conditions into test cases","Writing test plan","Executing test cases"],c:1,ex:"Test design transforms test conditions into implementable test cases."},
+{id:70,ch:1,cn:"Fundamentals of Testing",q:"Which is NOT a valid exit criterion?",o:["All planned test cases executed","Defect rate below specified level","Test manager is satisfied","Coverage reached planned level"],c:2,ex:"Exit criteria should be objective and measurable."},
+{id:71,ch:1,cn:"Fundamentals of Testing",q:"What is a 'stub'?",o:["Simplified component for integration testing","Test management tool","Documentation format","Defect tracking mechanism"],c:0,ex:"A stub is a placeholder component used during integration testing."},
+{id:72,ch:1,cn:"Fundamentals of Testing",q:"MAIN benefit of test management tool?",o:["Replaces test planning","Helps organize, track, report on testing","Executes tests automatically","Eliminates manual testing"],c:1,ex:"Test management tools organize, track, and report testing activities."},
+{id:73,ch:1,cn:"Fundamentals of Testing",q:"Key activity in test planning?",o:["Executing test cases","Defining scope, objectives, approach, resources","Designing test cases","Reporting defects"],c:1,ex:"Test planning defines scope, objectives, approach, resources, schedule."},
+{id:74,ch:1,cn:"Fundamentals of Testing",q:"What is a 'driver' in integration testing?",o:["Person who coordinates testing","Component that calls the component being tested","Test management tool","Testing methodology"],c:1,ex:"A driver calls and controls the component being tested."},
+{id:75,ch:1,cn:"Fundamentals of Testing",q:"What is a test environment?",o:["Physical office","Configured HW/SW/network for test execution","Development environment","Production environment"],c:1,ex:"A test environment is configured hardware, software, network for tests."},
+{id:76,ch:1,cn:"Fundamentals of Testing",q:"Which principle warns about absence-of-errors fallacy?",o:["Exhaustive testing impossible","Testing shows presence of defects","Finding/fixing defects doesn't guarantee quality","Defect clustering"],c:2,ex:"Just fixing defects doesn't ensure the system meets user needs."},
+{id:77,ch:1,cn:"Fundamentals of Testing",q:"What is a test item?",o:["Individual test case","Work product to be tested","Test tool","Test deliverable"],c:1,ex:"A test item is a work product that is the object of testing."},
+{id:78,ch:1,cn:"Fundamentals of Testing",q:"What is a 'fail' test result?",o:["Test not executed","Actual doesn't match expected","Test finds no defects","Test skipped"],c:1,ex:"A test fails when actual results don't match expected results."},
+{id:79,ch:1,cn:"Fundamentals of Testing",q:"Difference between defect report and test case?",o:["They are the same","Case defines how to test; report documents a problem","Report is for developers only","Case is more detailed"],c:1,ex:"A test case defines how to test; a defect report documents a discovered problem."},
+{id:80,ch:1,cn:"Fundamentals of Testing",q:"Which is a test deliverable?",o:["Source code","Test plan, cases, summary report","Project charter","User documentation"],c:1,ex:"Deliverables include plans, cases, procedures, reports, defect reports."},
+{id:81,ch:1,cn:"Fundamentals of Testing",q:"What is 'fault masking'?",o:["Hiding defects from test team","One defect prevents detection of another","Masking test results","Defects fixed incorrectly"],c:1,ex:"Fault masking: one defect prevents detection of another."},
+{id:82,ch:1,cn:"Fundamentals of Testing",q:"Purpose of test summary report?",o:["List every test case","Provide summary of testing results to stakeholders","Document test environment","List all defects"],c:1,ex:"Summary report provides testing results overview for decisions."},
+{id:83,ch:1,cn:"Fundamentals of Testing",q:"Defect discovery cost order (lowest to highest)?",o:["Production, design, coding, requirements","Requirements, coding, testing, production","Production, testing, design, requirements","Requirements, design, coding, testing, production"],c:3,ex:"Cost increases as defects found later."},
+{id:84,ch:1,cn:"Fundamentals of Testing",q:"Correct definition of 'error'?",o:["Problem causing failure","Human action producing incorrect result","Deviation between expected and actual","Software bug"],c:1,ex:"An error is a human action producing an incorrect result."},
+{id:85,ch:1,cn:"Fundamentals of Testing",q:"What is a test metric?",o:["Measurement to assess testing progress/quality","Unit for code size","Tool for automation","Defect classification"],c:0,ex:"Test metrics measure progress, quality, efficiency, coverage."},
+{id:86,ch:1,cn:"Fundamentals of Testing",q:"Purpose of feasibility study in testing?",o:["Determine if approach is technically and economically viable","Plan all test cases","Assign testers","Define test strategy"],c:0,ex:"Feasibility study assesses technical and economic viability."},
+{id:87,ch:1,cn:"Fundamentals of Testing",q:"Key factor in selecting test techniques?",o:["Tester personality","System type and risk profile","Time of year","Documentation color"],c:1,ex:"Selection depends on system type, risk, requirements, expertise."},
+{id:88,ch:1,cn:"Fundamentals of Testing",q:"What is a test charter?",o:["Legal document authorizing testing","Document defining scope, goals, time box","Test case template","Defect tracking doc"],c:1,ex:"A test charter defines scope, goals, and time box for exploratory testing."},
+{id:89,ch:1,cn:"Fundamentals of Testing",q:"Purpose of iterative development for testing?",o:["Eliminate planning","Enable continuous testing and feedback","Delay testing until end","Reduce test cases"],c:1,ex:"Iterative development enables continuous testing and feedback."},
+{id:90,ch:1,cn:"Fundamentals of Testing",q:"Which is a valid performance requirement?",o:["System shall have blue button","System shall respond within 2 seconds","System shall allow login","System shall display welcome"],c:1,ex:"Performance requirements specify speed under certain conditions."},
+
+
+// === CHAPTER 2: TESTING THROUGHOUT SDLC (~60 questions) ===
+{id:91,ch:2,cn:"Testing Throughout SDLC",q:"In sequential development, when does testing typically begin?",o:["Before requirements","After coding is complete","During design","At project start"],c:1,ex:"In sequential models, testing typically begins after coding."},
+{id:92,ch:2,cn:"Testing Throughout SDLC",q:"Which model integrates testing as a continuous activity?",o:["Waterfall","V-Model","Agile","Big Bang"],c:2,ex:"Agile integrates testing continuously throughout iterations."},
+{id:93,ch:2,cn:"Testing Throughout SDLC",q:"In V-Model, which phase corresponds to acceptance testing?",o:["Detailed design","Module design","Requirements analysis","Coding"],c:2,ex:"Acceptance testing corresponds to requirements analysis."},
+{id:94,ch:2,cn:"Testing Throughout SDLC",q:"Key characteristic of Agile testing?",o:["Testing only at sprint end","Testers and developers work together continuously","No documentation created","Testing only by independent teams"],c:1,ex:"Agile emphasizes continuous collaboration between testers and developers."},
+{id:95,ch:2,cn:"Testing Throughout SDLC",q:"Benefit of shift-left testing?",o:["Testing delayed until after development","Defects found earlier reducing costs","Less documentation needed","Less tester involvement"],c:1,ex:"Shift-left moves testing earlier, finding defects when cheaper."},
+{id:96,ch:2,cn:"Testing Throughout SDLC",q:"Purpose of verification in V-Model?",o:["Verify system in production","Verify work products against specs at each phase","Verify user acceptance","Verify test coverage"],c:1,ex:"Verification checks work products against specifications at each phase."},
+{id:97,ch:2,cn:"Testing Throughout SDLC",q:"Which test level is primarily performed by developers?",o:["Acceptance testing","System testing","Component (unit) testing","Regression testing"],c:2,ex:"Component testing is typically performed by developers."},
+{id:98,ch:2,cn:"Testing Throughout SDLC",q:"In Agile sprint, who is responsible for quality?",o:["Only testers","Only developers","The entire cross-functional team","Project manager"],c:2,ex:"In Agile, quality is a whole-team responsibility."},
+{id:99,ch:2,cn:"Testing Throughout SDLC",q:"Key DevOps principle for testing?",o:["Testing only in pre-production","Continuous testing in CI/CD pipeline","Manual testing before deployment","Testing by QA team only"],c:1,ex:"DevOps integrates continuous testing throughout CI/CD pipeline."},
+{id:100,ch:2,cn:"Testing Throughout SDLC",q:"What is 'system integration testing'?",o:["Testing individual components","Testing interactions between different systems","Testing complete system in controlled environment","Testing by end users"],c:1,ex:"System integration testing focuses on interactions between different systems."},
+{id:101,ch:2,cn:"Testing Throughout SDLC",q:"Regression testing is primarily concerned with?",o:["Testing new features","Ensuring changes haven't broken existing functionality","Testing user acceptance","Performance testing"],c:1,ex:"Regression testing ensures changes haven't introduced new defects."},
+{id:102,ch:2,cn:"Testing Throughout SDLC",q:"Which validates system meets original business requirements?",o:["Component testing","Integration testing","System testing","Acceptance testing"],c:3,ex:"Acceptance testing validates business requirements are met."},
+{id:103,ch:2,cn:"Testing Throughout SDLC",q:"In CI, when should automated tests run?",o:["Only at sprint end","After every code commit","Once per week","Only before release"],c:1,ex:"In CI, tests run after every commit for quick feedback."},
+{id:104,ch:2,cn:"Testing Throughout SDLC",q:"Characteristics of exploratory testing in Agile?",o:["No charter needed","Time-boxed sessions with simultaneous learning and testing","Only for automation engineers","Replaces all scripted testing"],c:1,ex:"Agile exploratory testing uses time-boxed sessions for learning and testing."},
+{id:105,ch:2,cn:"Testing Throughout SDLC",q:"Purpose of testing during requirements analysis?",o:["Execute test cases","Verify requirements are testable, complete, consistent","Test the database","Validate the UI"],c:1,ex:"Testing during requirements reviews requirements for testability and completeness."},
+{id:106,ch:2,cn:"Testing Throughout SDLC",q:"Main benefit of TDD?",o:["Tests written after code","Developers write tests before code promoting better design","No manual testing needed","Only system tests written"],c:1,ex:"TDD writes tests before code, promoting better design and immediate feedback."},
+{id:107,ch:2,cn:"Testing Throughout SDLC",q:"Example of acceptance testing in Agile?",o:["Unit testing by developers","Sprint review with product owner","Performance testing","Regression testing"],c:1,ex:"In Agile, acceptance testing often happens during sprint reviews."},
+{id:108,ch:2,cn:"Testing Throughout SDLC",q:"What is continuous deployment?",o:["Deploying without testing","Every passing change deployed to production automatically","Manual testing before deployment","Deploying only on weekends"],c:1,ex:"Continuous deployment auto-deploys changes that pass automated tests."},
+{id:109,ch:2,cn:"Testing Throughout SDLC",q:"Purpose of testing during maintenance?",o:["Rewrite software","Verify maintenance changes work without regression","Write new requirements","Redesign system"],c:1,ex:"Maintenance testing verifies changes work without adversely affecting existing functionality."},
+{id:110,ch:2,cn:"Testing Throughout SDLC",q:"Which test level focuses on complete system behavior?",o:["Component testing","Integration testing","System testing","Acceptance testing"],c:2,ex:"System testing focuses on complete system behavior."},
+{id:111,ch:2,cn:"Testing Throughout SDLC",q:"Primary concern of component testing?",o:["System-wide behavior","Individual components in isolation","User acceptance","Performance"],c:1,ex:"Component testing focuses on individual components in isolation."},
+{id:112,ch:2,cn:"Testing Throughout SDLC",q:"What is 'continuous testing' in DevOps?",o:["Testing only during test phase","Automated testing throughout delivery pipeline","Manual testing continuously","Testing only in production"],c:1,ex:"Continuous testing is automated testing throughout the CI/CD pipeline."},
+{id:113,ch:2,cn:"Testing Throughout SDLC",q:"What is 'shift-right' testing?",o:["Moving all testing to beginning","Testing in production (monitoring, A/B testing)","Eliminating non-functional testing","Only unit tests"],c:1,ex:"Shift-right extends testing into production with monitoring and experimentation."},
+{id:114,ch:2,cn:"Testing Throughout SDLC",q:"Advantage of iterative development for testing?",o:["Testers not involved until end","Test results inform subsequent testing","Regression testing unnecessary","Only exploratory testing"],c:1,ex:"Iterative development allows test results to improve subsequent testing."},
+{id:115,ch:2,cn:"Testing Throughout SDLC",q:"Example of static testing during design phase?",o:["Executing unit tests","Reviewing design documents for completeness","Running performance tests","Testing the UI"],c:1,ex:"Design reviews check documents for completeness and consistency."},
+{id:116,ch:2,cn:"Testing Throughout SDLC",q:"Relationship between test levels and V-Model?",o:["No relationship","Each level corresponds to a dev phase on opposite side","Levels independent of phases","Only system testing in V-Model"],c:1,ex:"Each test level corresponds to a development phase on the other side."},
+{id:117,ch:2,cn:"Testing Throughout SDLC",q:"Key practice in Agile testing?",o:["Complete testing at project end","Testing parallel with development each sprint","Only developers write tests","No documentation"],c:1,ex:"Agile testing happens parallel with development each sprint."},
+{id:118,ch:2,cn:"Testing Throughout SDLC",q:"Purpose of ATDD?",o:["Write tests after development","Define acceptance criteria collaboratively before development","Eliminate manual testing","Automate all tests"],c:1,ex:"ATDD defines acceptance criteria collaboratively before development."},
+{id:119,ch:2,cn:"Testing Throughout SDLC",q:"What is build verification testing?",o:["Full regression suite","Quick tests to check if build is stable enough for further testing","Production tests only","Performance tests"],c:1,ex:"Build verification (smoke) tests quickly check basic functionality."},
+{id:120,ch:2,cn:"Testing Throughout SDLC",q:"Best approach to test independence in SDLC?",o:["Only developers test","Combination of independent and developer testing","Only independent testers","Testers work alone"],c:1,ex:"Best results combine developer testing with independent testing."},
+{id:121,ch:2,cn:"Testing Throughout SDLC",q:"Impact of skipping regression testing after fixes?",o:["No impact","Old defects may reappear, new ones introduced","System becomes faster","Users more satisfied"],c:1,ex:"Without regression testing, fixes can reintroduce or create new defects."},
+{id:122,ch:2,cn:"Testing Throughout SDLC",q:"Best testing approach for Scrum?",o:["Complete all tests in first sprint","Continuous testing with feedback loops each sprint","Test at project end","Only manual testing"],c:1,ex:"Scrum benefits from continuous testing within each sprint."},
+{id:123,ch:2,cn:"Testing Throughout SDLC",q:"Purpose of 'definition of done' in Agile?",o:["Define when project is finished","Specify quality criteria for story completion","Define when testing starts","Specify test strategy"],c:1,ex:"Definition of done specifies quality criteria before a story is complete."},
+{id:124,ch:2,cn:"Testing Throughout SDLC",q:"In which model is testing most likely a separate phase?",o:["Agile","Kanban","Waterfall","DevOps"],c:2,ex:"In waterfall, testing is typically a distinct phase after coding."},
+{id:125,ch:2,cn:"Testing Throughout SDLC",q:"Key difference between verification and validation?",o:["They are identical","Verification: product built right; Validation: right product built","Verification in production; validation in testing","Verification automated; validation manual"],c:1,ex:"Verification confirms specifications; validation confirms user needs."},
+{id:126,ch:2,cn:"Testing Throughout SDLC",q:"Primary purpose of CI for testing?",o:["Eliminate testing","Enable early/frequent detection of integration defects","Reduce test cases","Delay testing"],c:1,ex:"CI enables early detection of integration defects after every commit."},
+{id:127,ch:2,cn:"Testing Throughout SDLC",q:"Which test level is performed by customer/end user?",o:["Component testing","Integration testing","System testing","Acceptance testing"],c:3,ex:"Acceptance testing is performed by the customer or end user."},
+{id:128,ch:2,cn:"Testing Throughout SDLC",q:"What is a 'bug bash'?",o:["Defect finding tool","Concentrated effort where multiple testers find many defects","Automated test type","Defect tracking method"],c:1,ex:"A bug bash is a time-boxed event with multiple testers finding defects."},
+{id:129,ch:2,cn:"Testing Throughout SDLC",q:"What is 'infrastructure as code' for testing?",o:["Eliminates test environments","Allows version-controlled, reproducible test environments","Programming language for tests","Replaces test management"],c:1,ex:"IaC allows test environments to be version-controlled and reproducible."},
+{id:130,ch:2,cn:"Testing Throughout SDLC",q:"Disadvantage of late testing in sequential lifecycle?",o:["Too many test cases","Defects found late are expensive to fix and cause delays","Too much time","Too many environments"],c:1,ex:"Late testing means defects are most expensive and cause delays."},
+{id:131,ch:2,cn:"Testing Throughout SDLC",q:"Role of testing in 'fail-fast' approach?",o:["Testing delayed until failure","Detect failures as early as possible to minimize impact","Testing only in production","Testing avoided"],c:1,ex:"Fail-fast detects failures early for quick feedback and resolution."},
+{id:132,ch:2,cn:"Testing Throughout SDLC",q:"What is 'test first' approach?",o:["All testing before coding","Tests written before the code they validate","Testers start before developers","Testing first phase"],c:1,ex:"Test-first approaches write tests before the code."},
+{id:133,ch:2,cn:"Testing Throughout SDLC",q:"Purpose of code reviews in SDLC?",o:["Replace testing","Find defects early when cheapest to fix","Write test cases","Manage defects"],c:1,ex:"Code reviews find defects early when most cost-effective."},
+{id:134,ch:2,cn:"Testing Throughout SDLC",q:"What is continuous delivery?",o:["Manual deployment","Ability to deploy to production anytime via automated pipelines","Deploying without testing","Weekly deployments"],c:1,ex:"Continuous delivery enables deployment anytime through automated pipelines."},
+{id:135,ch:2,cn:"Testing Throughout SDLC",q:"What is 'definition of ready' in Agile?",o:["Criteria for when testing is finished","Criteria a story must meet before entering a sprint","List of tools needed","When team is ready to deploy"],c:1,ex:"Definition of ready specifies conditions before a story enters a sprint."},
+{id:136,ch:2,cn:"Testing Throughout SDLC",q:"Purpose of test oracle in SDLC?",o:["Manage test environments","Provide expected results for comparison","Track defects","Estimate effort"],c:1,ex:"A test oracle provides expected results for comparison during testing."},
+{id:137,ch:2,cn:"Testing Throughout SDLC",q:"Which testing is most likely during maintenance?",o:["Alpha testing","Regression testing","Beta testing","Installation testing"],c:1,ex:"Regression testing is critical during maintenance."},
+{id:138,ch:2,cn:"Testing Throughout SDLC",q:"Benefit of risk-based testing in SDLC?",o:["All tests automated","Testing focused on highest-risk areas","No manual testing","Testing only in production"],c:1,ex:"Risk-based testing focuses effort on highest-risk areas."},
+{id:139,ch:2,cn:"Testing Throughout SDLC",q:"In Kanban, how is testing managed?",o:["Separate column on board","Integrated into each workflow stage","Only at end","Not part of Kanban"],c:1,ex:"In Kanban, testing is integrated into workflow stages."},
+{id:140,ch:2,cn:"Testing Throughout SDLC",q:"Advantage of combining manual and automated testing?",o:["Eliminates test planning","Leverages human insight and machine efficiency","Reduces team size","Ensures all automated"],c:1,ex:"Combining both leverages human creativity with automated speed."},
+{id:141,ch:2,cn:"Testing Throughout SDLC",q:"What is 'meta-testing'?",o:["Testing the test process itself","Testing the test environment","Testing test cases","Testing management tools"],c:0,ex:"Meta-testing evaluates and improves the test process itself."},
+{id:142,ch:2,cn:"Testing Throughout SDLC",q:"Benefit of parallel testing in SDLC?",o:["Sequential execution","Multiple test levels can occur simultaneously","Only one test at a time","Testing is delayed"],c:1,ex:"Parallel testing allows multiple activities simultaneously, reducing time."},
+{id:143,ch:2,cn:"Testing Throughout SDLC",q:"What is a 'test gate'?",o:["Physical door to test lab","Checkpoint where criteria must be met before next phase","Test tool","Defect review meeting"],c:1,ex:"A test gate is a checkpoint for criteria before proceeding."},
+{id:144,ch:2,cn:"Testing Throughout SDLC",q:"Purpose of test strategy document?",o:["List every test case","Define overall testing approach for org/project","Track individual defects","Schedule stand-ups"],c:1,ex:"A test strategy defines the overall approach to testing."},
+{id:145,ch:2,cn:"Testing Throughout SDLC",q:"TRUE about testing in microservices?",o:["Only system testing needed","Both individual service and integration testing important","Testing unnecessary","Only manual testing"],c:1,ex:"Microservices need both individual and integration testing."},
+{id:146,ch:2,cn:"Testing Throughout SDLC",q:"Purpose of staging environment?",o:["Develop new features","Pre-production environment mirroring production for final testing","Store test data","Manage test cases"],c:1,ex:"Staging mirrors production for final validation before release."},
+{id:147,ch:2,cn:"Testing Throughout SDLC",q:"Key consideration for mobile app testing?",o:["Test on one device only","Multiple device types, screen sizes, network conditions","Testing not needed","Only UI testing"],c:1,ex:"Mobile testing requires diverse devices, screens, and networks."},
+{id:148,ch:2,cn:"Testing Throughout SDLC",q:"What is blue-green deployment?",o:["Color-coding test cases","Two identical environments for instant rollback if testing fails","Testing in blue environments only","Performance test type"],c:1,ex:"Blue-green runs two identical environments for instant rollback."},
+{id:149,ch:2,cn:"Testing Throughout SDLC",q:"Role of A/B testing in SDLC?",o:["Replace regression testing","Compare two versions to determine better user performance","Test alphabet","Unit testing"],c:1,ex:"A/B testing compares two versions with real users."},
+{id:150,ch:2,cn:"Testing Throughout SDLC",q:"What is 'canary testing'?",o:["Testing with large groups","Deploying to small user subset first before full rollout","Testing only on Linux","Automated unit testing"],c:1,ex:"Canary testing deploys to small subset first, monitoring for issues."},
+]
+
+
+// === CHAPTER 3: STATIC TESTING (~45 questions) ===
+{id:181,ch:3,cn:"Static Testing",q:"What is static testing?",o:["Testing by executing software","Testing work products through examination without execution","Testing in static environment","Testing at fixed time"],c:1,ex:"Static testing examines work products without executing software."},
+{id:182,ch:3,cn:"Static Testing",q:"Which is an example of static testing?",o:["Running unit tests","Executing integration tests","Performing a code review","Running performance tests"],c:2,ex:"Code review is static testing examining code without execution."},
+{id:183,ch:3,cn:"Static Testing",q:"Main benefit of static testing over dynamic?",o:["Finds runtime defects","Detects defects early when cheaper to fix","Replaces dynamic testing","Requires execution tools"],c:1,ex:"Static testing finds defects early when cheaper to fix."},
+{id:184,ch:3,cn:"Static Testing",q:"Which is a formal review technique?",o:["Ad hoc review","Informal walkthrough","Inspection","Desk checking"],c:2,ex:"Inspection is a formal, structured review with defined roles and criteria."},
+{id:185,ch:3,cn:"Static Testing",q:"What is the purpose of a walkthrough?",o:["Exercise code","Present work product for feedback and discussion","Measure complexity","Run performance tests"],c:1,ex:"A walkthrough presents work products for discussion and feedback."},
+{id:186,ch:3,cn:"Static Testing",q:"Which is a static analysis tool for code?",o:["JUnit","Selenium","SonarQube","JMeter"],c:2,ex:"SonarQube is a static analysis tool for source code examination."},
+{id:187,ch:3,cn:"Static Testing",q:"What is a 'reviewer' in static testing?",o:["Person who executes tests","Person who examines work products to identify defects","Project manager","System administrator"],c:1,ex:"A reviewer examines work products to identify defects and provide feedback."},
+{id:188,ch:3,cn:"Static Testing",q:"What is a review meeting?",o:["Meeting to discuss test results","Meeting where reviewers discuss findings from examining work product","Sprint planning","Defect triage"],c:1,ex:"Review meetings discuss findings from examining work products."},
+{id:189,ch:3,cn:"Static Testing",q:"Entry criterion for formal inspection?",o:["Work product must be tested","Work product ready and review plan prepared","Review must be informal","No preparation needed"],c:1,ex:"Entry criteria include work product readiness and review plan preparation."},
+{id:190,ch:3,cn:"Static Testing",q:"Role of 'moderator' in inspection?",o:["Write code","Plan and facilitate the inspection process","Fix all defects","Manage project schedule"],c:1,ex:"The moderator plans, facilitates, and tracks the inspection."},
+{id:191,ch:3,cn:"Static Testing",q:"What is 'static analysis'?",o:["Analyzing test results","Automated analysis of code/documents without execution","Manual code review","Performance testing"],c:1,ex:"Static analysis uses tools to analyze code without execution."},
+{id:192,ch:3,cn:"Static Testing",q:"Benefit of checklists in static testing?",o:["Replace reviews","Ensure consistent examination of common defect types","Only for formal inspections","Eliminate preparation"],c:1,ex:"Checklists ensure systematic examination for common defect types."},
+{id:193,ch:3,cn:"Static Testing",q:"Which documents can undergo static testing?",o:["Only source code","Requirements, designs, code, test documents, user docs","Only test cases","Only user manuals"],c:1,ex:"Any work product can undergo static testing."},
+{id:194,ch:3,cn:"Static Testing",q:"Purpose of defect logging during review?",o:["Hide defects","Document defects for later resolution","Count reviewers","Schedule next review"],c:1,ex:"Defect logging documents all identified defects for resolution."},
+{id:195,ch:3,cn:"Static Testing",q:"Difference between walkthrough and inspection?",o:["They are identical","Walkthrough less formal; inspection has defined roles and process","Walkthrough more formal","Walkthrough requires tools"],c:1,ex:"Walkthroughs are informal; inspections have defined roles and formal process."},
+{id:196,ch:3,cn:"Static Testing",q:"Which is a role in formal inspection?",o:["Test executor","Author","Debugger","Deployer"],c:1,ex:"The author created the work product being inspected."},
+{id:197,ch:3,cn:"Static Testing",q:"What is the 'preparation' phase in reviews?",o:["Setting up test environment","Reviewers individually examine work product before meeting","Writing test cases","Executing tests"],c:1,ex:"Reviewers individually examine the work product before the meeting."},
+{id:198,ch:3,cn:"Static Testing",q:"Common defect type found in static testing?",o:["Runtime errors","Syntax errors, logic errors, documentation errors","Performance bottlenecks only","UI issues only"],c:1,ex:"Static testing finds syntax, logic, documentation errors, and more."},
+{id:199,ch:3,cn:"Static Testing",q:"Purpose of a review report?",o:["List all developers","Document review results, defects, and recommendations","Schedule meetings","Track budget"],c:1,ex:"Review reports document results, defects, and recommendations."},
+{id:200,ch:3,cn:"Static Testing",q:"What is a 'rule' in formal inspection?",o:["Coding standard to follow","Guideline for examining the work product","Project management rule","Testing procedure"],c:1,ex:"Rules are guidelines directing reviewers on what to examine."},
+{id:201,ch:3,cn:"Static Testing",q:"Example of static analysis finding?",o:["Runtime exception","Unreachable code block","Database connection failure","Network timeout"],c:1,ex:"Static analysis detects unreachable code, unused variables, etc."},
+{id:202,ch:3,cn:"Static Testing",q:"Purpose of requirements review checklist?",o:["Check requirements are testable, complete, consistent, unambiguous","Write test cases","Execute tests","Manage defects"],c:0,ex:"Checklists help find ambiguity, incompleteness, inconsistency in requirements."},
+{id:203,ch:3,cn:"Static Testing",q:"What is a 'synopsis' in formal inspection?",o:["Final test report","Brief summary by author for reviewers","List of test cases","Defect spreadsheet"],c:1,ex:"A synopsis is a brief summary by the author before individual preparation."},
+{id:204,ch:3,cn:"Static Testing",q:"Common defect in design document reviews?",o:["Runtime performance issues","Missing or ambiguous design decisions","Test failures","Production outages"],c:1,ex:"Design reviews find missing requirements, ambiguous specs, inconsistencies."},
+{id:205,ch:3,cn:"Static Testing",q:"What is a 'lint' tool?",o:["Test execution tool","Tool checking code for errors and style violations","Project management tool","Test data generator"],c:1,ex:"Lint tools check source code for errors and style violations."},
+{id:206,ch:3,cn:"Static Testing",q:"Advantage of peer reviews over solo reviews?",o:["Faster","Multiple perspectives find more and different defects","No preparation needed","Less formal"],c:1,ex:"Multiple perspectives increase defect detection effectiveness."},
+{id:207,ch:3,cn:"Static Testing",q:"What is a 'defect taxonomy'?",o:["List of all defects","Classification system for organizing defect types","Test case template","Defect tracking tool"],c:1,ex:"Defect taxonomies classify and organize defect types systematically."},
+{id:208,ch:3,cn:"Static Testing",q:"Exit criterion for formal inspection?",o:["All team members satisfied","All identified defects resolved or accepted","Inspection takes at least one hour","No more than 5 reviewers"],c:1,ex:"Exit criteria require all defects to be resolved or formally accepted."},
+{id:209,ch:3,cn:"Static Testing",q:"Purpose of review follow-up?",o:["Schedule next review","Verify all identified defects have been addressed","Write test cases","Execute tests"],c:1,ex:"Follow-up verifies all defects are properly addressed and resolved."},
+{id:210,ch:3,cn:"Static Testing",q:"What is a 'code smell'?",o:["Runtime error","Indicators of potential deeper problems in code","Compilation error","Database issue"],c:1,ex:"Code smells indicate deeper problems needing refactoring."},
+{id:211,ch:3,cn:"Static Testing",q:"Purpose of static testing in requirements?",o:["Execute test cases","Find defects before they impact design and coding","Deploy system","Manage environments"],c:1,ex:"Static testing of requirements finds defects before they propagate."},
+{id:212,ch:3,cn:"Static Testing",q:"What is 'perspective-based reading'?",o:["Reading left to right","Reviewing from specific stakeholder perspective","Reading silently","Reading line by line"],c:1,ex:"Perspective-based reading examines from a specific stakeholder's view."},
+{id:213,ch:3,cn:"Static Testing",q:"Tool for static analysis of requirements?",o:["Debuggers","Requirements management tools with validation","Compilers","Test execution tools"],c:1,ex:"Requirements tools analyze documents for completeness and consistency."},
+{id:214,ch:3,cn:"Static Testing",q:"Purpose of a review plan?",o:["Write test cases","Define scope, schedule, resources, criteria for review","Track defects","Manage test execution"],c:1,ex:"A review plan defines scope, schedule, resources, and criteria."},
+{id:215,ch:3,cn:"Static Testing",q:"Example of walkthrough activity?",o:["Running unit tests","Author presents and explains work product to reviewers","Executing integration tests","Deploying to production"],c:1,ex:"In a walkthrough, the author presents and explains the work product."},
+{id:216,ch:3,cn:"Static Testing",q:"What is a 'buddy check'?",o:["Formal inspection","Informal review by colleague","Tool-based review","Automated review"],c:1,ex:"A buddy check is an informal review by a colleague."},
+{id:217,ch:3,cn:"Static Testing",q:"Primary focus of requirements review?",o:["Code quality","Requirements quality (completeness, consistency, testability)","Test case design","Deployment procedures"],c:1,ex:"Requirements reviews focus on quality attributes of requirements."},
+{id:218,ch:3,cn:"Static Testing",q:"Characteristic of effective static testing?",o:["No preparation needed","Clear objectives, defined roles, documented findings","Only developers participate","No follow-up needed"],c:1,ex:"Effective static testing needs clear objectives, roles, preparation, and documentation."},
+{id:219,ch:3,cn:"Static Testing",q:"What is 'cycle time' metric in reviews?",o:["How long the meeting lasts","Total time from review initiation to action completion","Time between meetings","Time to write test cases"],c:1,ex:"Cycle time measures total time from initiation to completion of actions."},
+{id:220,ch:3,cn:"Static Testing",q:"Relationship between static and dynamic testing?",o:["Mutually exclusive","Complementary; both needed for comprehensive testing","Dynamic replaces static","Static only for documentation"],c:1,ex:"Static and dynamic testing are complementary, both needed."},
+{id:221,ch:3,cn:"Static Testing",q:"What is a 'review finding'?",o:["Test case result","Issue, question, or defect identified during review","Project milestone","Test environment config"],c:1,ex:"A review finding is any issue or defect identified during examination."},
+{id:222,ch:3,cn:"Static Testing",q:"Benefit of static analysis in CI pipeline?",o:["Replaces manual review","Provides immediate, consistent feedback after each commit","Eliminates testing","Slows down builds"],c:1,ex:"Static analysis in CI provides immediate, consistent code quality feedback."},
+{id:223,ch:3,cn:"Static Testing",q:"What is a 'convention' in code reviews?",o:["Formal rule","Agreed standard or guideline checked against","Meeting time","Tool config"],c:1,ex:"Conventions are agreed standards reviewers check the code against."},
+{id:224,ch:3,cn:"Static Testing",q:"Purpose of 'knowledge transfer' in reviews?",o:["Hide information","Share domain knowledge among team members","Transfer code ownership","Manage test data"],c:1,ex:"Reviews facilitate knowledge transfer among team members."},
+{id:225,ch:3,cn:"Static Testing",q:"Quality characteristic assessed in static testing?",o:["Runtime performance","Maintainability","User satisfaction","Market acceptance"],c:1,ex:"Static testing assesses maintainability, readability, complexity without execution."},
+{id:226,ch:3,cn:"Static Testing",q:"What is a 'peer review'?",o:["Review by managers","Review where colleagues examine each other's work","Automated review","Customer review"],c:1,ex:"Peer reviews are colleague examinations of each other's work products."},
+{id:227,ch:3,cn:"Static Testing",q:"Primary objective of static analysis of source code?",o:["Test functionality","Find coding errors, vulnerabilities, enforce standards","Measure performance","Test UI"],c:1,ex:"Static analysis finds errors, vulnerabilities, and enforces coding standards."},
+{id:228,ch:3,cn:"Static Testing",q:"What is a 'trip report' in inspections?",o:["Travel document","Summary of inspection findings and actions","Defect tracking report","Test summary"],c:1,ex:"A trip report documents inspection findings and recommended actions."},
+{id:229,ch:3,cn:"Static Testing",q:"What is a 'static analysis warning'?",o:["Runtime error message","Potential issue that may or may not be a defect","Compilation error","Deployment warning"],c:1,ex:"Warnings are potential issues needing human evaluation."},
+{id:230,ch:3,cn:"Static Testing",q:"Limitation of static testing?",o:["Cannot find runtime defects","Too slow","Only works for code","Requires execution"],c:0,ex:"Static testing cannot find runtime defects as it examines without execution."},
+{id:231,ch:3,cn:"Static Testing",q:"What is a 'review summary report'?",o:["Detailed defect list","Summary including metrics, counts, assessment","Test execution report","Project status"],c:1,ex:"A summary report provides overview of review metrics and assessment."},
+{id:232,ch:3,cn:"Static Testing",q:"Relationship between refactoring and static testing?",o:["No relationship","Static analysis identifies code needing refactoring","Refactoring replaces testing","Only for new code"],c:1,ex:"Static analysis identifies code smells that indicate refactoring opportunities."},
+{id:233,ch:3,cn:"Static Testing",q:"What is 'component interface' in design review?",o:["User interface","Defined interactions and contracts between components","Test interface","Database interface"],c:1,ex:"Component interfaces define interactions reviewed for completeness and consistency."},
+{id:234,ch:3,cn:"Static Testing",q:"Metric for review effectiveness?",o:["Test cases executed","Defect detection rate (defects per hour or type)","Number of requirements","Code execution time"],c:1,ex:"Effectiveness measured by defect detection rate, density, and time."},
+{id:235,ch:3,cn:"Static Testing",q:"Purpose of 'kickoff' in formal inspection?",o:["Present work product","Introduce process, roles, logistics","Fix defects","Write test cases"],c:1,ex:"The kickoff introduces the process, assigns roles, and establishes logistics."},
+{id:236,ch:3,cn:"Static Testing",q:"Spelling/grammar checker is example of?",o:["Dynamic testing tool","Static analysis tool for documentation","Test execution tool","Performance tool"],c:1,ex:"Spelling checkers are static analysis tools for documentation."},
+{id:237,ch:3,cn:"Static Testing",q:"Static testing of test documentation involves?",o:["Running test cases","Reviewing test plans/cases for completeness and consistency","Executing regression tests","Testing in production"],c:1,ex:"Static testing of test docs reviews for completeness and consistency."},
+{id:238,ch:3,cn:"Static Testing",q:"What is a 'complexity metric'?",o:["System load measure","Measure of code structural complexity (e.g., cyclomatic)","Test coverage measure","Team performance measure"],c:1,ex:"Complexity metrics like cyclomatic complexity measure structural complexity."},
+{id:239,ch:3,cn:"Static Testing",q:"Code complexity concern in static testing?",o:["Code too short","High complexity makes code harder to understand, test, maintain","Code too fast","Too many comments"],c:1,ex:"High complexity increases difficulty of understanding, testing, and maintenance."},
+{id:240,ch:3,cn:"Static Testing",q:"What is a 'code standard'?",o:["Project deadline","Agreed set of coding conventions to comply with","Testing standard","Documentation format"],c:1,ex:"Code standards are agreed conventions checked by static analysis."},
+{id:241,ch:3,cn:"Static Testing",q:"What is a 'reviewer checklist' for code?",o:["List of test cases","List of common defects and standards to check","Project schedule","Defect template"],c:1,ex:"Checklists provide systematic lists of defects and standards to check."},
+{id:242,ch:3,cn:"Static Testing",q:"What is 'design by contract'?",o:["Negotiating contracts","Defining clear interfaces with pre/postconditions verifiable statically","Managing test data","Executing tests"],c:1,ex:"Design by contract defines verifiable pre/postconditions and invariants."},
+{id:243,ch:3,cn:"Static Testing",q:"What is a 'false positive' in static analysis?",o:["Unfixed defect","Warning that is not actually a real defect","True defect found","Passing test case"],c:1,ex:"A false positive is a warning that isn't an actual defect."},
+{id:244,ch:3,cn:"Static Testing",q:"What is a 'refactoring opportunity'?",o:["Bug to fix","Code that could be improved in structure without behavior change","New feature","Test case to write"],c:1,ex:"Refactoring opportunities are code that can be improved structurally."},
+{id:245,ch:3,cn:"Static Testing",q:"Primary goal of code review meeting?",o:["Write code","Discuss findings and identify defects collaboratively","Execute test cases","Deploy software"],c:1,ex:"Code review meetings discuss findings and identify defects collaboratively."},
+{id:246,ch:3,cn:"Static Testing",q:"What is 'traceability analysis'?",o:["Track test execution","Verify all requirements are addressed in design and code","Track defects","Manage environments"],c:1,ex:"Traceability analysis verifies requirements are addressed throughout."},
+{id:247,ch:3,cn:"Static Testing",q:"Benefit of static analysis for security?",o:["Tests runtime security only","Identifies potential vulnerabilities before execution","Replaces penetration testing","Only checks passwords"],c:1,ex:"Static analysis (SAST) identifies potential security vulnerabilities in code."},
+{id:248,ch:3,cn:"Static Testing",q:"Example of 'code convention'?",o:["Variable naming convention (camelCase)","Test execution order","Deployment procedure","Requirements format"],c:0,ex:"Code conventions include naming, formatting, comments, and structure guidelines."},
+{id:249,ch:3,cn:"Static Testing",q:"What is 'review meeting agenda'?",o:["List of attendees","Outline of topics to be covered","Project schedule","Test case list"],c:1,ex:"An agenda outlines topics, time allocations, and discussion points."},
+{id:250,ch:3,cn:"Static Testing",q:"Difference between syntax and semantic checking?",o:["They are the same","Syntax checks structure; semantic checks meaning and logic","Syntax for runtime; semantic for compile time","Syntax manual; semantic automated"],c:1,ex:"Syntax checks structure; semantic checks meaning and logic."},
+]
+
+
+// === CHAPTER 4: TEST ANALYSIS AND DESIGN (~100 questions) ===
+{id:281,ch:4,cn:"Test Analysis and Design",q:"What is test analysis?",o:["Running test cases","Identifying what to test and creating test conditions","Documenting test results","Fixing defects"],c:1,ex:"Test analysis identifies what to test by analyzing test basis documents."},
+{id:282,ch:4,cn:"Test Analysis and Design",q:"Which is a black-box test design technique?",o:["Statement testing","Decision testing","Equivalence partitioning","Path testing"],c:2,ex:"Equivalence partitioning is black-box based on inputs/outputs."},
+{id:283,ch:4,cn:"Test Analysis and Design",q:"Purpose of boundary value analysis?",o:["Test all values in range","Test values at boundaries where defects often occur","Test only middle value","Test random values"],c:1,ex:"BVA tests at boundaries where defects are most likely."},
+{id:284,ch:4,cn:"Test Analysis and Design",q:"What is a test condition?",o:["Specific input value","An item or feature to be tested","Result of a test","Test tool"],c:1,ex:"A test condition is an item or feature to be tested."},
+{id:285,ch:4,cn:"Test Analysis and Design",q:"Which technique uses decision tables?",o:["Equivalence partitioning","Decision table testing","State transition testing","Statement testing"],c:1,ex:"Decision table testing creates tests from condition/action combinations."},
+{id:286,ch:4,cn:"Test Analysis and Design",q:"Purpose of use case testing?",o:["Test individual functions","Test end-to-end business scenarios","Test only UI","Test only non-functional"],c:1,ex:"Use case testing tests end-to-end business scenarios."},
+{id:287,ch:4,cn:"Test Analysis and Design",q:"What is a test case?",o:["A defect","Set of inputs, execution conditions, and expected results","Test tool","Test environment"],c:1,ex:"A test case defines inputs, conditions, expected results, and criteria."},
+{id:288,ch:4,cn:"Test Analysis and Design",q:"Difference between verification and validation test cases?",o:["Same thing","Verification tests specs conformance; validation tests fitness for use","Verification for devs only","Validation for testers only"],c:1,ex:"Verification confirms specs conformance; validation confirms fitness for use."},
+{id:289,ch:4,cn:"Test Analysis and Design",q:"What is equivalence partitioning?",o:["Dividing inputs into groups expected to be treated equally","Testing at boundaries","Using decision tables","State-based testing"],c:0,ex:"EP divides inputs into partitions with expected equal behavior."},
+{id:290,ch:4,cn:"Test Analysis and Design",q:"What is a white-box test technique?",o:["Equivalence partitioning","Statement coverage testing","Boundary value analysis","Use case testing"],c:1,ex:"Statement coverage is a white-box technique using code structure."},
+{id:291,ch:4,cn:"Test Analysis and Design",q:"What is decision coverage (branch coverage)?",o:["Testing all requirements","Testing all decision outcomes (true/false)","Testing all paths","Testing all statements"],c:1,ex:"Decision coverage ensures every decision outcome is tested."},
+{id:292,ch:4,cn:"Test Analysis and Design",q:"What is a test procedure?",o:["A single test case","Description of how to execute one or more test cases","A defect report","A test tool"],c:1,ex:"A test procedure describes how to execute test cases."},
+{id:293,ch:4,cn:"Test Analysis and Design",q:"What is statement coverage?",o:["Testing all decisions","Percentage of executable statements exercised by tests","Testing all paths","Testing all branches"],c:1,ex:"Statement coverage measures % of executable statements exercised."},
+{id:294,ch:4,cn:"Test Analysis and Design",q:"What is the purpose of pair-wise testing?",o:["Test all combinations","Test all pairs of parameters to find interaction defects","Test pairs of testers","Test two systems together"],c:1,ex:"Pair-wise testing tests all parameter pairs to find interaction defects efficiently."},
+{id:295,ch:4,cn:"Test Analysis and Design",q:"What is a state transition diagram?",o:["Shows code structure","Shows states and transitions of the system","Shows test results","Shows defect flow"],c:1,ex:"State transition diagrams show system states and valid/invalid transitions."},
+{id:296,ch:4,cn:"Test Analysis and Design",q:"What is a key test design principle?",o:["Test everything equally","Use risk to prioritize what to test and how thoroughly","Only test the happy path","Always use the same technique"],c:1,ex:"Risk-based prioritization ensures the most critical areas are thoroughly tested."},
+{id:297,ch:4,cn:"Test Analysis and Design",q:"What is a 'happy path' test?",o:["Testing error conditions","Testing the normal/expected flow without errors","Testing edge cases only","Testing performance"],c:1,ex:"Happy path testing verifies the normal flow works correctly without errors."},
+{id:298,ch:4,cn:"Test Analysis and Design",q:"What is negative testing?",o:["Testing with negative numbers","Testing with invalid inputs to verify error handling","Testing pessimistically","Testing the UI negatively"],c:1,ex:"Negative testing uses invalid inputs to verify error handling."},
+{id:299,ch:4,cn:"Test Analysis and Design",q:"What is a 'test oracle problem'?",o:["Oracle software is expensive","Difficulty determining expected results for some tests","Oracle tool is missing","Oracle has bugs"],c:1,ex:"The oracle problem is difficulty determining expected results for comparison."},
+{id:300,ch:4,cn:"Test Analysis and Design",q:"What is experience-based testing?",o:["Testing based on documentation only","Testing using tester knowledge and experience","Automated testing only","Random testing"],c:1,ex:"Experience-based testing leverages tester knowledge and past experience."},
+{id:301,ch:4,cn:"Test Analysis and Design",q:"What is error guessing?",o:["Guessing random errors","Using experience to guess where defects are likely","Random testing","Guessing test results"],c:1,ex:"Error guessing uses experience to identify likely defect locations."},
+{id:302,ch:4,cn:"Test Analysis and Design",q:"What is the purpose of a test charter?",o:["Legal authority","Guide exploratory testing sessions with scope and goals","A test case template","A defect report"],c:1,ex:"A test charter guides exploratory testing with scope, goals, and resources."},
+{id:303,ch:4,cn:"Test Analysis and Design",q:"What is session-based test management?",o:["Managing all testing sessions","Approach to manage exploratory testing with time-boxed sessions","Session recording tool","Meeting management"],c:1,ex:"Session-based management uses time-boxed sessions for exploratory testing."},
+{id:304,ch:4,cn:"Test Analysis and Design",q:"What is combinatorial testing?",o:["Combining testers","Testing combinations of input parameters","Combining test tools","Combining test environments"],c:1,ex:"Combinatorial testing tests combinations of input parameters."},
+{id:305,ch:4,cn:"Test Analysis and Design",q:"What is a 'test scenario'?",o:["Detailed steps","High-level description of what to test","Test environment","Test data set"],c:1,ex:"A test scenario is a high-level description of what to be tested."},
+{id:306,ch:4,cn:"Test Analysis and Design",q:"What is a test data requirement?",o:["The test environment","Specific data needed to execute test cases","The test tool","The defect report"],c:1,ex:"Test data requirements define the specific data needed for test execution."},
+{id:307,ch:4,cn:"Test Analysis and Design",q:"What is a 'feature list' in test analysis?",o:["Marketing features","List of all features to be tested from the requirements","List of test tools","List of testers"],c:1,ex:"A feature list enumerates all features from requirements to be tested."},
+{id:308,ch:4,cn:"Test Analysis and Design",q:"What is 'requirement traceability'?",o:["Tracing test execution","Mapping requirements to test cases for coverage","Tracing defects","Tracing project budget"],c:1,ex:"Requirement traceability maps requirements to test cases for coverage analysis."},
+{id:309,ch:4,cn:"Test Analysis and Design",q:"What is a 'coverage criterion'?",o:["A test tool","A rule defining when sufficient testing is achieved","A defect type","A test environment"],c:1,ex:"Coverage criteria define when sufficient testing has been achieved."},
+{id:310,ch:4,cn:"Test Analysis and Design",q:"What is a 'test design specification'?",o:["A single test case","Document detailing test conditions, cases, and expected results","A test plan","A defect report"],c:1,ex:"A test design specification details test conditions, cases, and results."},
+{id:311,ch:4,cn:"Test Analysis and Design",q:"What is 'decision table' testing?",o:["Testing a database table","Creating tests from condition-action combinations in a table","Testing at decision points","Testing decision makers"],c:1,ex:"Decision table testing creates tests from all combinations of conditions and actions."},
+{id:312,ch:4,cn:"Test Analysis and Design",q:"What is 'causal chain' in defect analysis?",o:["Chain of command","Sequence of events leading from root cause to observed defect","Chain of defects","Testing chain"],c:1,ex:"A causal chain traces events from root cause to observed failure."},
+{id:313,ch:4,cn:"Test Analysis and Design",q:"What is 'test adequacy criteria'?",o:["How many test cases are enough","Criteria determining if testing is sufficient","Test case quality","Test tool adequacy"],c:1,ex:"Adequacy criteria determine if testing effort is sufficient."},
+{id:314,ch:4,cn:"Test Analysis and Design",q:"What is a 'critical path' in testing?",o:["The longest path through the code","The most important sequence of tests to execute","The critical defect path","The critical test environment"],c:1,ex:"The critical path identifies the most important test sequence to execute first."},
+{id:315,ch:4,cn:"Test Analysis and Design",q:"What is 'interface testing'?",o:["Testing the user interface only","Testing interactions between components or systems","Testing network interfaces","Testing API only"],c:1,ex:"Interface testing verifies interactions between components or systems."},
+{id:316,ch:4,cn:"Test Analysis and Design",q:"What is 'API testing'?",o:["Testing the UI","Testing Application Programming Interfaces directly","Testing network cables","Testing applications"],c:1,ex:"API testing tests application programming interfaces directly."},
+{id:317,ch:4,cn:"Test Analysis and Design",q:"What is 'usability testing'?",o:["Testing if software is usable by target users","Testing if software is useful","Testing user satisfaction survey","Testing user interface design"],c:0,ex:"Usability testing evaluates how easily target users can use the system."},
+{id:318,ch:4,cn:"Test Analysis and Design",q:"What is 'accessibility testing'?",o:["Testing physical access","Testing system is usable by people with disabilities","Testing network access","Testing security access"],c:1,ex:"Accessibility testing ensures the system is usable by people with disabilities."},
+{id:319,ch:4,cn:"Test Analysis and Design",q:"What is 'configuration testing'?",o:["Testing the project configuration","Testing software on different configurations/hardware","Testing configuration files","Testing environment config"],c:1,ex:"Configuration testing verifies software works across different configurations."},
+{id:320,ch:4,cn:"Test Analysis and Design",q:"What is 'compatibility testing'?",o:["Testing software compatibility with other software","Testing test compatibility","Tool compatibility","Team compatibility"],c:0,ex:"Compatibility testing verifies the software works with other software and environments."},
+{id:321,ch:4,cn:"Test Analysis and Design",q:"What is 'installation testing'?",o:["Testing the installer process","Testing software installation and uninstallation","Testing installed hardware","Testing installation team"],c:0,ex:"Installation testing verifies the software can be installed and uninstalled correctly."},
+{id:322,ch:4,cn:"Test Analysis and Design",q:"What is 'mutation testing'?",o:["Testing mutations in code","Modifying code to check if tests detect the changes","Genetic testing for software","Random code changes"],c:1,ex:"Mutation testing modifies code to verify tests can detect the changes."},
+{id:323,ch:4,cn:"Test Analysis and Design",q:"What is 'test coverage analysis'?",o:["Analyzing test results","Measuring how much of the test object is covered by tests","Analyzing test environment","Analyzing test costs"],c:1,ex:"Test coverage analysis measures how much of the test object is exercised."},
+{id:324,ch:4,cn:"Test Analysis and Design",q:"What is a 'test suite'?",o:["A single test case","Collection of related test cases for a feature or component","A test plan","A defect list"],c:1,ex:"A test suite is a collection of related test cases."},
+{id:325,ch:4,cn:"Test Analysis and Design",q:"What is 'requirements-based testing'?",o:["Testing requirements documents","Designing tests directly from requirements","Testing requirements management tools","Writing requirements for tests"],c:1,ex:"Requirements-based testing designs tests directly from requirements."},
+{id:326,ch:4,cn:"Test Analysis and Design",q:"What is a 'risk item' in test analysis?",o:["A test case at risk","A condition or event with potential negative impact","A risky test tool","A risky tester"],c:1,ex:"A risk item is a condition or event with potential negative impact on quality."},
+{id:327,ch:4,cn:"Test Analysis and Design",q:"What is 'orthogonal arrays' in testing?",o:["Testing arrays in code","Statistical method for selecting balanced test combinations","Array data structure testing","Testing array boundaries"],c:1,ex:"Orthogonal arrays select balanced, representative combinations of test inputs."},
+{id:328,ch:4,cn:"Test Analysis and Design",q:"What is a 'test basis'?",o:["The foundation for test analysis","The tools used for testing","The test team basis","The project basis"],c:0,ex:"The test basis is the body of knowledge used to derive tests (requirements, design, code)."},
+{id:329,ch:4,cn:"Test Analysis and Design",q:"What is 'equivalence class'?",o:["A class in OOP","A set of test inputs expected to be treated the same","A test class","A defect class"],c:1,ex:"An equivalence class is a group of inputs expected to behave identically."},
+{id:330,ch:4,cn:"Test Analysis and Design",q:"What is the purpose of a 'test model'?",o:["Physical model of test environment","Abstract representation of the test object for test design","3D model of software","Test case model"],c:1,ex:"A test model is an abstract representation used for test design and analysis."},
+{id:341,ch:4,cn:"Test Analysis and Design",q:"What is 'path testing'?",o:["Testing file paths","Testing all independent paths through the code","Testing navigation paths","Testing network paths"],c:1,ex:"Path testing tests independent execution paths through the code."},
+{id:342,ch:4,cn:"Test Analysis and Design",q:"What is a 'condition coverage'?",o:["Testing all conditions","Testing each condition in decision outcomes","Testing the condition of the system","Testing conditions in the environment"],c:1,ex:"Condition coverage ensures each atomic condition in a decision is tested."},
+{id:343,ch:4,cn:"Test Analysis and Design",q:"What is a 'loop testing' technique?",o:["Testing the loop of a program","Testing loop constructs at boundaries and within range","Testing do-while loops only","Testing infinite loops"],c:1,ex:"Loop testing validates loop constructs at boundaries and within range."},
+{id:344,ch:4,cn:"Test Analysis and Design",q:"What is 'data flow testing'?",o:["Testing database data flow","Testing how data moves through the program","Testing data file flow","Testing data center flow"],c:1,ex:"Data flow testing tests how data variables are defined and used."},
+{id:345,ch:4,cn:"Test Analysis and Design",q:"What is 'basis path testing'?",o:["Testing the basis of the project","Identifying and testing independent paths through code","Testing the basic path of users","Testing based on path analysis"],c:1,ex:"Basis path testing identifies and tests independent execution paths."},
+{id:346,ch:4,cn:"Test Analysis and Design",q:"What is 'control flow testing'?",o:["Testing the control panel","Testing the order of program execution","Testing flow charts","Testing the control room"],c:1,ex:"Control flow testing tests the sequence in which statements execute."},
+{id:347,ch:4,cn:"Test Analysis and Design",q:"What is a 'coverage tool'?",o:["A tool to cover test cases","Tool that measures code/test coverage percentage","A test execution tool","A defect tracking tool"],c:1,ex:"Coverage tools measure what percentage of code or tests have been exercised."},
+{id:348,ch:4,cn:"Test Analysis and Design",q:"What is 'multiple condition coverage'?",o:["Testing multiple conditions at once","Testing all combinations of conditions within decisions","Testing conditions in multiple tests","Testing with multiple data sets"],c:1,ex:"Multiple condition coverage tests all combinations of conditions in decisions."},
+{id:349,ch:4,cn:"Test Analysis and Design",q:"What is 'modified condition/decision coverage' (MC/DC)?",o:["Modified test conditions","Each condition independently affects the decision outcome","Modified decision testing","Changing conditions during testing"],c:1,ex:"MC/DC ensures each condition independently affects the decision outcome."},
+{id:350,ch:4,cn:"Test Analysis and Design",q:"What is a 'test oracle' problem in practice?",o:["Oracle software is expensive","Difficulty determining expected results, especially for complex systems","Oracle tool is missing","Oracle has no bugs"],c:1,ex:"In practice, determining expected results can be very difficult for complex systems."},
+{id:351,ch:4,cn:"Test Analysis and Design",q:"What is 'exploratory testing'?",o:["Unstructured random testing","Simultaneous learning, test design and execution","Only automated testing","Testing without any documentation"],c:1,ex:"Exploratory testing combines simultaneous learning, design, and execution."},
+{id:352,ch:4,cn:"Test Analysis and Design",q:"What is 'context-driven testing'?",o:["Testing the context menu","Approach where testing is guided by context of the project","Context-aware testing","Testing the application context"],c:1,ex:"Context-driven testing adapts approach based on project context."},
+{id:353,ch:4,cn:"Test Analysis and Design",q:"What is 'risk-based test design'?",o:["Designing risky tests","Designing tests focusing on highest-risk areas first","Designing tests based on test risk","Risk-free test design"],c:1,ex:"Risk-based design focuses testing on highest-risk areas."},
+{id:354,ch:4,cn:"Test Analysis and Design",q:"What is 'test prioritization'?",o:["Giving test IDs","Ranking test cases based on importance and risk","Prioritizing test execution order","Prioritizing test cases in documentation"],c:1,ex:"Test prioritization ranks test cases based on importance, risk, and impact."},
+{id:355,ch:4,cn:"Test Analysis and Design",q:"What is a 'test condition checklist'?",o:["A list of defects","List of test conditions to ensure completeness","A test case list","A checklist for test tools"],c:1,ex:"A test condition checklist ensures all conditions are identified."},
+{id:356,ch:4,cn:"Test Analysis and Design",q:"What is 'requirement validation' in testing?",o:["Checking if requirements are correct, complete, and testable","Validating test results","Validating the test environment","Validating test data"],c:0,ex:"Requirement validation checks if requirements are correct, complete, and testable."},
+{id:357,ch:4,cn:"Test Analysis and Design",q:"What is 'boundary analysis'?",o:["Analyzing project boundaries","Testing values at boundaries of equivalence partitions","Boundary of the test environment","Test case boundary"],c:1,ex:"Boundary analysis tests values at the edges of input ranges."},
+{id:358,ch:4,cn:"Test Analysis and Design",q:"What is 'state-based testing'?",o:["Testing the system state","Testing based on state transitions of the system","State of the test environment","State of test data"],c:1,ex:"State-based testing uses state transition models to design tests."},
+{id:359,ch:4,cn:"Test Analysis and Design",q:"What is 'scenario testing'?",o:["Testing movie scenarios","Testing end-to-end business scenarios","Testing user scenarios only","Testing development scenarios"],c:1,ex:"Scenario testing tests realistic end-to-end business scenarios."},
+{id:360,ch:4,cn:"Test Analysis and Design",q:"What is 'workflow testing'?",o:["Testing office workflows","Testing business workflows end-to-end","Testing development workflow","Testing test workflow"],c:1,ex:"Workflow testing verifies business workflows function correctly end-to-end."},
+]
+
+
+// === CHAPTER 5: MANAGING TEST ACTIVITIES (~45 questions) ===
+{id:151,ch:5,cn:"Managing Test Activities",q:"What is a key principle of whole-team approach?",o:["Only testers responsible for quality","Everyone contributes to quality","Quality is project manager's responsibility","Quality means no defects"],c:1,ex:"Whole-team approach means everyone shares responsibility for quality."},
+{id:152,ch:5,cn:"Managing Test Activities",q:"Purpose of deployment pipeline in CI/CD?",o:["Store source code","Automate process from commit to deployment","Manage test cases","Track defects"],c:1,ex:"A deployment pipeline automates from commit through build, test, deploy."},
+{id:153,ch:5,cn:"Managing Test Activities",q:"Difference between alpha and beta testing?",o:["They are the same","Alpha internal; beta external with real users","Alpha automated; beta manual","Alpha for mobile; beta for web"],c:1,ex:"Alpha is internal testing; beta is external with selected end users."},
+{id:154,ch:5,cn:"Managing Test Activities",q:"Testing activity during requirements analysis?",o:["Running test cases","Reviewing requirements for completeness, consistency, testability","Coding software","Deploying to production"],c:1,ex:"During requirements analysis, review for completeness, consistency, testability."},
+{id:155,ch:5,cn:"Managing Test Activities",q:"What is a 'feature flag'?",o:["Flag marking tests complete","Toggle allowing features enabled/disabled in production","Test documentation type","Defect classification"],c:1,ex:"Feature flags enable/disable features in production for testing and rollout."},
+{id:156,ch:5,cn:"Managing Test Activities",q:"TRUE about testing in SOA?",o:["Only UI testing needed","Both individual service and integration testing important","SOA doesn't need testing","Only manual testing"],c:1,ex:"SOA requires individual service testing and integration testing."},
+{id:157,ch:5,cn:"Managing Test Activities",q:"Purpose of 'bug triage' meeting?",o:["Write test cases","Prioritize defects based on severity and assign for fixing","Delete old tests","Plan automation"],c:1,ex:"Bug triage prioritizes defects and assigns them for resolution."},
+{id:158,ch:5,cn:"Managing Test Activities",q:"Key difference between manual and automated regression?",o:["Manual is always faster","Automated faster for repetitive; manual better for exploratory","Only manual is valid","No difference"],c:1,ex:"Automated is efficient for repetitive tests; manual is better for exploratory."},
+{id:159,ch:5,cn:"Managing Test Activities",q:"What is 'shift-left security testing'?",o:["Security testing only in production","Integrating security testing early in SDLC","Removing security tests","Testing security at end"],c:1,ex:"Shift-left security integrates testing early for cheaper vulnerability fixes."},
+{id:160,ch:5,cn:"Managing Test Activities",q:"Benefit of test data management?",o:["Unnecessary","Ensures realistic, consistent, compliant test data","Eliminates test environments","Replaces test case management"],c:1,ex:"Test data management ensures realistic, consistent, compliant test data."},
+{id:361,ch:5,cn:"Managing Test Activities",q:"What is test planning?",o:["Writing test cases","Defining scope, objectives, approach, resources, schedule for testing","Executing tests","Fixing defects"],c:1,ex:"Test planning defines scope, objectives, approach, resources, and schedule."},
+{id:362,ch:5,cn:"Managing Test Activities",q:"What is a 'test plan'?",o:["A test case list","Document defining scope, approach, resources, schedule, risks","A defect report","A test tool"],c:1,ex:"A test plan is a formal document defining all aspects of the testing approach."},
+{id:363,ch:5,cn:"Managing Test Activities",q:"What is 'test monitoring'?",o:["Running tests","Collecting and reporting status of testing activities","Managing test tools","Writing test reports"],c:1,ex:"Test monitoring collects and reports on testing progress and status."},
+{id:364,ch:5,cn:"Managing Test Activities",q:"What is 'test control'?",o:["Controlling the test environment","Taking corrective actions to keep testing on track","Controlling test tools","Managing test data"],c:1,ex:"Test control takes corrective actions to keep testing aligned with plan."},
+{id:365,ch:5,cn:"Managing Test Activities",q:"What is a 'risk register'?",o:["List of test cases","Document listing identified risks with analysis and mitigation","Defect tracking tool","Test plan"],c:1,ex:"A risk register documents identified risks, their analysis, and mitigation plans."},
+{id:366,ch:5,cn:"Managing Test Activities",q:"What is 'test estimation'?",o:["Counting test cases","Predicting effort, time, and resources needed for testing","Estimating defect count","Estimating project cost"],c:1,ex:"Test estimation predicts the effort, time, and resources needed."},
+{id:367,ch:5,cn:"Managing Test Activities",q:"Which estimation technique uses expert judgment?",o:["Function point analysis","Wideband Delphi","Lines of code counting","Test case counting"],c:1,ex:"Wideband Delphi is a consensus-based expert estimation technique."},
+{id:368,ch:5,cn:"Managing Test Activities",q:"What is a 'defect lifecycle'?",o:["Test case lifecycle","Process from defect discovery to resolution and closure","Test plan lifecycle","Release lifecycle"],c:1,ex:"The defect lifecycle tracks defects from discovery through resolution."},
+{id:369,ch:5,cn:"Managing Test Activities",q:"What is 'defect severity'?",o:["Priority of fixing","Impact of the defect on the system","How many people found it","How long it takes to fix"],c:1,ex:"Defect severity measures the impact of the defect on the system."},
+{id:370,ch:5,cn:"Managing Test Activities",q:"What is 'defect priority'?",o:["How severe the defect is","Urgency of fixing the defect","Number of test cases","Test coverage level"],c:1,ex:"Defect priority indicates the urgency of fixing the defect."},
+{id:371,ch:5,cn:"Managing Test Activities",q:"What is a 'test metrics' dashboard?",o:["A test case list","Visual display of key testing metrics and KPIs","A defect report","A test plan"],c:1,ex:"A metrics dashboard visualizes key testing metrics for stakeholder visibility."},
+{id:372,ch:5,cn:"Managing Test Activities",q:"What is 'entry criteria' in testing?",o:["When testing is complete","Conditions that must be met before testing can begin","The entry to the test lab","When the test team arrives"],c:1,ex:"Entry criteria define conditions that must be met before testing begins."},
+{id:373,ch:5,cn:"Managing Test Activities",q:"What is 'exit criteria' in testing?",o:["When testing starts","Conditions that must be met to consider testing complete","Exit from the test lab","When testers leave"],c:1,ex:"Exit criteria define conditions for considering testing complete."},
+{id:374,ch:5,cn:"Managing Test Activities",q:"What is 'test reporting'?",o:["Running tests","Documenting and communicating test results to stakeholders","Writing test cases","Managing defects"],c:1,ex:"Test reporting documents and communicates results to stakeholders."},
+{id:375,ch:5,cn:"Managing Test Activities",q:"What is a 'defect report' used for?",o:["Writing test cases","Documenting a discovered defect for tracking and resolution","Test planning","Test environment setup"],c:1,ex:"Defect reports document issues for tracking, triage, and resolution."},
+{id:376,ch:5,cn:"Managing Test Activities",q:"What is 'root cause analysis'?",o:["Analyzing test results","Identifying the underlying reason for defects","Analyzing the test root directory","Testing root functions"],c:1,ex:"Root cause analysis identifies the underlying reasons for defects."},
+{id:377,ch:5,cn:"Managing Test Activities",q:"What is 'lessons learned' in test closure?",o:["What was learned in school","Knowledge gained from the project to improve future testing","Test results","Defect analysis"],c:1,ex:"Lessons learned capture knowledge to improve future testing processes."},
+{id:378,ch:5,cn:"Managing Test Activities",q:"What is a 'test summary report'?",o:["Detailed test case list","Executive summary of testing activities and results","Test plan summary","Defect summary only"],c:1,ex:"A test summary report provides an executive summary of testing results."},
+{id:379,ch:5,cn:"Managing Test Activities",q:"What is a 'release criteria' document?",o:["Test plan","Document defining quality criteria for release readiness","Release notes","Defect report"],c:1,ex:"Release criteria define quality conditions that must be met for release."},
+{id:380,ch:5,cn:"Managing Test Activities",q:"What is 'defect clustering' used for?",o:["Grouping testers","Focusing testing effort on modules with most defects","Clustering test environments","Defect reporting"],c:1,ex:"Defect clustering identifies modules with most defects for focused testing."},
+{id:381,ch:5,cn:"Managing Test Activities",q:"What is a 'test coordinator'?",o:["A test tool","Person who coordinates testing activities across teams","A test type","A defect type"],c:1,ex:"A test coordinator manages and coordinates testing across multiple teams."},
+{id:382,ch:5,cn:"Managing Test Activities",q:"What is 'cost of quality'?",o:["Price of test tools","Total cost of prevention, appraisal, and failure costs","Cost of development","Project budget"],c:1,ex:"Cost of quality includes prevention, appraisal, and failure costs."},
+{id:383,ch:5,cn:"Managing Test Activities",q:"What is 'test process improvement'?",o:["Making tests faster","Systematic approach to improve the testing process","Adding more test cases","Buying new tools"],c:1,ex:"Test process improvement systematically enhances testing effectiveness."},
+{id:384,ch:5,cn:"Managing Test Activities",q:"What is TMMi?",o:["A test tool","Test Maturity Model integration - framework for test process improvement","A testing technique","A defect tracking system"],c:1,ex:"TMMi is a framework for assessing and improving test process maturity."},
+{id:385,ch:5,cn:"Managing Test Activities",q:"What is a 'risk mitigation' strategy?",o:["Ignoring risks","Actions taken to reduce the likelihood or impact of risks","Risk documentation only","Risk identification"],c:1,ex:"Risk mitigation involves actions to reduce risk likelihood or impact."},
+{id:386,ch:5,cn:"Managing Test Activities",q:"What is 'test governance'?",o:["Testing the government","Framework for accountability, oversight, and decision-making in testing","Test management tool","Test policy"],c:1,ex:"Test governance provides framework for accountability and oversight."},
+{id:387,ch:5,cn:"Managing Test Activities",q:"What is a 'stakeholder' in testing?",o:["Only the test team","Anyone with interest in the testing outcome","Only management","Only developers"],c:1,ex:"Stakeholders include anyone with interest in testing outcomes."},
+{id:388,ch:5,cn:"Managing Test Activities",q:"What is 'communication plan' in testing?",o:["Phone plan","Plan for communicating testing information to stakeholders","Email configuration","Meeting schedule only"],c:1,ex:"A communication plan defines how testing information is shared with stakeholders."},
+{id:389,ch:5,cn:"Managing Test Activities",q:"What is a 'defect aging' metric?",o:["Age of testers","Time a defect has been open since discovery","Test case age","Project age"],c:1,ex:"Defect aging measures how long a defect has remained open unresolved."},
+{id:390,ch:5,cn:"Managing Test Activities",q:"What is 'test effectiveness'?",o:["How fast tests run","How well testing finds defects and verifies quality","How many tests are written","Test tool effectiveness"],c:1,ex:"Test effectiveness measures how well testing finds defects and ensures quality."},
+{id:391,ch:5,cn:"Managing Test Activities",q:"What is 'test efficiency'?",o:["Test quality","Ratio of testing output to input (e.g., defects found per hour)","Test speed only","Test coverage"],c:1,ex:"Test efficiency measures output per input, like defects found per hour."},
+{id:392,ch:5,cn:"Managing Test Activities",q:"What is a 'test SLA'?",o:["Service Level Agreement for testing","Test case naming convention","Software License Agreement","Service Level for developers"],c:0,ex:"A test SLA defines service level expectations for testing activities."},
+{id:393,ch:5,cn:"Managing Test Activities",q:"What is 'defect removal efficiency'?",o:["Speed of fixing defects","Percentage of defects found before release vs. total found","Efficiency of test team","Test case efficiency"],c:1,ex:"DRE measures the percentage of defects found before release."},
+{id:394,ch:5,cn:"Managing Test Activities",q:"What is 'test automation ROI'?",o:["Return on investment from automated tests","Speed of automation tools","Cost of automation tools","Number of automated tests"],c:0,ex:"Automation ROI measures the return on investment from test automation efforts."},
+{id:395,ch:5,cn:"Managing Test Activities",q:"What is a 'defect containment' strategy?",o:["Isolating testers","Actions to prevent defects from reaching production","Defect documentation","Defect hiding"],c:1,ex:"Defect containment prevents defects from reaching production through effective testing."},
+{id:396,ch:5,cn:"Managing Test Activities",q:"What is 'regression test selection'?",o:["Running all regression tests","Selecting subset of regression tests based on risk and change impact","Selecting test tools","Selecting testers"],c:1,ex:"Regression test selection chooses the most relevant tests based on changes."},
+{id:397,ch:5,cn:"Managing Test Activities",q:"What is a 'test gate' review?",o:["Physical gate","Review meeting before proceeding to next test phase","Test tool review","Defect review"],c:1,ex:"A test gate review evaluates whether criteria are met before the next phase."},
+{id:398,ch:5,cn:"Managing Test Activities",q:"What is 'defect discovery rate'?",o:["Speed of finding defects","Number of defects found per unit of time","Rate of fixing defects","Defect rejection rate"],c:1,ex:"Defect discovery rate measures how quickly defects are being found."},
+{id:399,ch:5,cn:"Managing Test Activities",q:"What is 'test documentation'?",o:["Only test cases","All documents created during the testing process","Only test reports","Only defect reports"],c:1,ex:"Test documentation includes all artifacts produced during testing."},
+{id:400,ch:5,cn:"Managing Test Activities",q:"What is a 'quality gate'?",o:["Physical gate","Checkpoint where quality criteria must be met before proceeding","Quality tool","Quality metric"],c:1,ex:"A quality gate is a checkpoint ensuring quality criteria before next phase."},
+]
+
+
+// === CHAPTER 6: TOOL SUPPORT FOR TESTING (~20 questions) ===
+{id:401,ch:6,cn:"Tool Support for Testing",q:"What is a test management tool?",o:["A tool for writing code","Tool to manage test cases, execution, and reporting","A tool for project management only","A tool for defect fixing"],c:1,ex:"Test management tools organize test cases, track execution, and generate reports."},
+{id:402,ch:6,cn:"Tool Support for Testing",q:"What is a test automation framework?",o:["Physical test framework","Reusable structure for organizing and executing automated tests","Test documentation framework","Project management framework"],c:1,ex:"An automation framework provides structure for organizing and executing automated tests."},
+{id:403,ch:6,cn:"Tool Support for Testing",q:"What is a 'record and playback' tool?",o:["Recording meetings","Tool that records user actions and replays them for testing","Audio recording tool","Video playback tool"],c:1,ex:"Record and playback tools capture user actions and replay them as automated tests."},
+{id:404,ch:6,cn:"Tool Support for Testing",q:"What is a 'test data generator'?",o:["Data analyst","Tool that creates test data for test execution","Data backup tool","Data visualization tool"],c:1,ex:"Test data generators create realistic test data for test execution."},
+{id:405,ch:6,cn:"Tool Support for Testing",q:"What is a 'defect tracking tool'?",o:["Tool for tracking project budget","Tool to record, manage, and track defects through lifecycle","Defect prevention tool","Defect creation tool"],c:1,ex:"Defect tracking tools manage defect lifecycle from discovery to resolution."},
+{id:406,ch:6,cn:"Tool Support for Testing",q:"What is a 'code coverage tool'?",o:["Tool to write code","Tool that measures percentage of code exercised by tests","Code writing tool","Code review tool"],c:1,ex:"Coverage tools measure what percentage of code is exercised by tests."},
+{id:407,ch:6,cn:"Tool Support for Testing",q:"What is a 'performance testing tool'?",o:["Tool to improve code performance","Tool that measures system performance under load","Performance review tool","Performance planning tool"],c:1,ex:"Performance tools measure response time, throughput, and resource usage under load."},
+{id:408,ch:6,cn:"Tool Support for Testing",q:"What is a 'security testing tool'?",o:["Physical security tool","Tool that identifies security vulnerabilities in software","Security camera tool","Lock tool"],c:1,ex:"Security tools identify vulnerabilities like SQL injection, XSS, and authentication flaws."},
+{id:409,ch:6,cn:"Tool Support for Testing",q:"What is a 'configuration management tool'?",o:["Tool to configure hardware","Tool to manage versions and configurations of testware","Tool to configure networks","Tool to configure OS"],c:1,ex:"Configuration management tools control versions and configurations of testware."},
+{id:410,ch:6,cn:"Tool Support for Testing",q:"What is a 'continuous integration tool'?",o:["Tool to integrate teams","Tool that automates build, test, and integration activities","Integration testing tool","Team integration tool"],c:1,ex:"CI tools automate building, testing, and integrating code changes."},
+{id:411,ch:6,cn:"Tool Support for Testing",q:"What is a 'static analysis tool'?",o:["Tool for dynamic analysis","Tool that analyzes code without execution","Tool for runtime analysis","Performance analysis tool"],c:1,ex:"Static analysis tools examine code without execution for defects and standards."},
+{id:412,ch:6,cn:"Tool Support for Testing",q:"What is a 'mock object'?",o:["Fake person","Test double that simulates behavior of real components","Mock data only","Test documentation mock"],c:1,ex:"Mock objects simulate real component behavior for isolated testing."},
+{id:413,ch:6,cn:"Tool Support for Testing",q:"What is a 'virtual test environment'?",o:["Physical lab","Software-emulated test environment","Virtual reality testing","Online test environment"],c:1,ex:"Virtual test environments use software emulation instead of physical hardware."},
+{id:414,ch:6,cn:"Tool Support for Testing",q:"What is a 'test harness'?",o:["Physical harness","Collection of software and data to test a component","Safety harness","Cable harness"],c:1,ex:"A test harness provides the framework and support for test execution."},
+{id:415,ch:6,cn:"Tool Support for Testing",q:"What is 'service virtualization'?",o:["Virtual services","Simulation of unavailable services for testing","Service management","Virtual meetings"],c:1,ex:"Service virtualization simulates unavailable services to enable testing."},
+{id:416,ch:6,cn:"Tool Support for Testing",q:"What is a 'test automation engineer'?",o:["Test tool","Person who designs, develops, and maintains automated tests","Test manager","Developer"],c:1,ex:"A test automation engineer designs, develops, and maintains automated tests."},
+{id:417,ch:6,cn:"Tool Support for Testing",q:"What is a 'CI/CD pipeline tool'?",o:["Plumbing tool","Tool automating build, test, and deployment pipeline","Test management tool","Code editor"],c:1,ex:"CI/CD pipeline tools automate the entire delivery process."},
+{id:418,ch:6,cn:"Tool Support for Testing",q:"What is an 'API testing tool'?",o:["Tool for testing network cables","Tool for testing application programming interfaces","API documentation tool","API design tool"],c:1,ex:"API testing tools test application programming interfaces directly."},
+{id:419,ch:6,cn:"Tool Support for Testing",q:"What is a 'mobile testing tool'?",o:["Phone accessory","Tool designed for testing mobile applications","Mobile device management","Mobile app development tool"],c:1,ex:"Mobile testing tools support testing on various mobile devices and platforms."},
+{id:420,ch:6,cn:"Tool Support for Testing",q:"What is 'test environment management'?",o:["Managing test cases","Managing and maintaining test environments for testing","Managing test tools","Managing test data"],c:1,ex:"Test environment management maintains and controls test environments."},
+]
+
+
+// ==================== EXAM LOGIC ====================
+let examQuestions=[];
+let currentQuestion=0;
+let userAnswers={};
+let timerInterval=null;
+let timeRemaining=3600;
+let startTime=null;
+let examFinished=false;
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function shuffleQuestionOptions(q){
+  const indices=[0,1,2,3];
+  shuffle(indices);
+  const newOptions=indices.map(i=>q.o[i]);
+  const newCorrect=indices.indexOf(q.c);
+  return{...q,o:newOptions,c:newCorrect,_origOrder:indices};
+}
+
+function startExam(){
+  examFinished=false;
+  userAnswers={};
+  currentQuestion=0;
+  timeRemaining=3600;
+  const shuffled=shuffle([...QUESTION_BANK]);
+  examQuestions=shuffled.slice(0,60).map(shuffleQuestionOptions);
+  document.getElementById('landing').style.display='none';
+  document.getElementById('exam').style.display='block';
+  document.getElementById('results').style.display='none';
+  startTime=Date.now();
+  renderQuestion();
+  renderPalette();
+  startTimer();
+}
+
+function startTimer(){
+  timerInterval=setInterval(()=>{
+    timeRemaining--;
+    const min=Math.floor(timeRemaining/60);
+    const sec=timeRemaining%60;
+    const timerEl=document.getElementById('timer');
+    timerEl.textContent=`${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    if(timeRemaining<=300) timerEl.classList.add('warning');
+    if(timeRemaining<=0){clearInterval(timerInterval);submitExam(true);}
+  },1000);
+}
+
+function renderQuestion(){
+  const q=examQuestions[currentQuestion];
+  document.getElementById('progress').textContent=`Question ${currentQuestion+1} / 60`;
+  document.getElementById('question-text').textContent=`Q${currentQuestion+1}. ${q.q}`;
+  const container=document.getElementById('options-container');
+  container.innerHTML='';
+  q.o.forEach((opt,i)=>{
+    const label=document.createElement('label');
+    const radio=document.createElement('input');
+    radio.type='radio';
+    radio.name='q'+currentQuestion;
+    radio.value=i;
+    if(userAnswers[currentQuestion]===i) radio.checked=true;
+    radio.addEventListener('change',()=>{userAnswers[currentQuestion]=i;renderPalette();});
+    label.appendChild(radio);
+    label.appendChild(document.createTextNode(' '+opt));
+    if(userAnswers[currentQuestion]===i) label.classList.add('selected');
+    container.appendChild(label);
+  });
+  document.querySelectorAll('input[name="q'+currentQuestion+'"]').forEach(r=>{
+    r.addEventListener('change',()=>renderQuestion());
+  });
+}
+
+function renderPalette(){
+  const grid=document.getElementById('palette-grid');
+  grid.innerHTML='';
+  for(let i=0;i<60;i++){
+    const btn=document.createElement('button');
+    btn.className='palette-btn';
+    btn.textContent=i+1;
+    if(userAnswers[i]!==undefined) btn.classList.add('answered');
+    if(i===currentQuestion) btn.classList.add('current');
+    btn.addEventListener('click',()=>{currentQuestion=i;renderQuestion();renderPalette();togglePalette();});
+    grid.appendChild(btn);
+  }
+}
+
+function togglePalette(){
+  const overlay=document.getElementById('palette-overlay');
+  overlay.classList.toggle('show');
+}
+
+function closePaletteOutside(e){
+  if(e.target===document.getElementById('palette-overlay')) togglePalette();
+}
+
+function prevQuestion(){
+  if(currentQuestion>0){currentQuestion--;renderQuestion();renderPalette();}
+}
+
+function nextQuestion(){
+  if(currentQuestion<59){currentQuestion++;renderQuestion();renderPalette();}
+}
+
+function submitExam(autoSubmit=false){
+  if(!autoSubmit){
+    const unanswered=Object.keys(userAnswers).length;
+    const msg=unanswered<60?`You have ${60-unanswered} unanswered question(s). Submit anyway?`:'Submit the exam?';
+    if(!confirm(msg)) return;
+  }
+  clearInterval(timerInterval);
+  examFinished=true;
+  const timeUsed=Math.floor((Date.now()-startTime)/1000);
+  let correct=0,incorrect=0,unanswered=0;
+  const results=[];
+  for(let i=0;i<60;i++){
+    const q=examQuestions[i];
+    const ans=userAnswers[i];
+    let status='unanswered';
+    if(ans!==undefined){
+      if(ans===q.c){status='correct';correct++;}
+      else{status='incorrect';incorrect++;}
+    }else{unanswered++;}
+    results.push({question:q,answer:ans,status,index:i});
+  }
+  const score=Math.round((correct/60)*100);
+  const passed=score>=65;
+  document.getElementById('exam').style.display='none';
+  document.getElementById('results').style.display='block';
+  document.getElementById('score-display').textContent=`${correct}/60 (${score}%)`;
+  document.getElementById('score-display').className='score-big '+(passed?'pass':'fail');
+  document.getElementById('pass-display').textContent=passed?'PASS':'FAIL';
+  document.getElementById('pass-display').className=passed?'pass':'fail';
+  document.getElementById('stat-correct').textContent=correct;
+  document.getElementById('stat-incorrect').textContent=incorrect;
+  document.getElementById('stat-unanswered').textContent=unanswered;
+  const m=Math.floor(timeUsed/60);
+  const s=timeUsed%60;
+  document.getElementById('stat-time').textContent=`${m}:${String(s).padStart(2,'0')}`;
+  renderReview(results);
+  saveHistory(score,correct,incorrect,unanswered,timeUsed);
+  renderHistory();
+}
+
+function renderReview(results,filter='all'){
+  const list=document.getElementById('review-list');
+  list.innerHTML='';
+  const filtered=filter==='all'?results:results.filter(r=>r.status===filter);
+  filtered.forEach(r=>{
+    const div=document.createElement('div');
+    div.className='review-item '+r.status;
+    let optionsHtml='';
+    r.question.o.forEach((opt,i)=>{
+      let cls='';
+      if(i===r.question.c) cls='right';
+      else if(i===r.answer&&r.status==='incorrect') cls='wrong';
+      optionsHtml+=`<p class="${cls}">${opt}${i===r.question.c?' (Correct)':''}</p>`;
+    });
+    div.innerHTML=`
+      <div class="review-q">Q${r.index+1}. ${r.question.q}</div>
+      <div class="review-options">${optionsHtml}</div>
+      <div class="review-explanation"><strong>Explanation:</strong> ${r.question.ex}</div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function filterReview(filter,btn){
+  document.querySelectorAll('.filter-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const results=[];
+  for(let i=0;i<60;i++){
+    const q=examQuestions[i];
+    const ans=userAnswers[i];
+    let status='unanswered';
+    if(ans!==undefined){
+      if(ans===q.c) status='correct';
+      else status='incorrect';
+    }
+    results.push({question:q,answer:ans,status,index:i});
+  }
+  renderReview(results,filter);
+}
+
+function saveHistory(score,correct,incorrect,unanswered,timeUsed){
+  const history=JSON.parse(localStorage.getItem('istqb_history')||'[]');
+  history.unshift({
+    date:new Date().toLocaleDateString(),
+    time:new Date().toLocaleTimeString(),
+    score,correct,incorrect,unanswered,timeUsed
+  });
+  if(history.length>10) history.pop();
+  localStorage.setItem('istqb_history',JSON.stringify(history));
+}
+
+function renderHistory(){
+  const history=JSON.parse(localStorage.getItem('istqb_history')||'[]');
+  const el=document.getElementById('history-content');
+  if(history.length===0){el.innerHTML='<p>No exam history yet.</p>';return;}
+  let html='<table class="history-table"><tr><th>Date</th><th>Score</th><th>Correct</th><th>Incorrect</th><th>Time</th></tr>';
+  history.forEach(h=>{
+    const m=Math.floor(h.timeUsed/60);
+    const s=h.timeUsed%60;
+    html+=`<tr><td>${h.date} ${h.time}</td><td>${h.score}%</td><td>${h.correct}</td><td>${h.incorrect}</td><td>${m}:${String(s).padStart(2,'0')}</td></tr>`;
+  });
+  html+='</table>';
+  el.innerHTML=html;
+}
+
+function retakeExam(){startExam();}
+function showLanding(){
+  document.getElementById('results').style.display='none';
+  document.getElementById('landing').style.display='block';
+}
+</script>
+</body>
+</html>
+

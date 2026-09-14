@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "name": "CTFL-Reviewer-Mock-Exam",
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "outputDirectory": "."
+}

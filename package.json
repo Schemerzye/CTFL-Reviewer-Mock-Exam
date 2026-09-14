@@ -1,0 +1,11 @@
+{
+  "name": "ctfl-reviewer-mock-exam",
+  "version": "1.0.0",
+  "description": "ISTQB CTFL Certification Reviewer and Mock Exam with 360+ question pool",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static site - no build needed'"
+  },
+  "keywords": ["istqb", "ctfl", "software-testing", "certification", "mock-exam", "reviewer"],
+  "license": "MIT"
+}
