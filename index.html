@@ -83,8 +83,9 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="info-card"><h3>60</h3><p>Questions per exam</p></div>
 <div class="info-card"><h3>60</h3><p>Minutes time limit</p></div>
 <div class="info-card"><h3>65%</h3><p>Passing score (39/60)</p></div>
-<div class="info-card"><h3>360+</h3><p>Question pool</p></div>
+<div class="info-card"><h3>414</h3><p>Question pool</p></div>
 </div>
+<p class="subtitle" style="font-size:.95rem;margin:1rem auto 0;max-width:560px;color:var(--text-light)">Easy to hardest mix - includes "Select TWO" questions and application-level (K3) calculation questions, like the official exam.</p>
 <button class="btn btn-primary" onclick="startExam()">Start Exam</button>
 </div>
 <div id="exam">
@@ -149,17 +150,17 @@ const QUESTION_BANK=[
 {id:1,ch:1,cn:"Fundamentals of Testing",q:"What is the primary purpose of testing software?",o:["To prove that the software has no defects","To find defects and gain information about the quality","To show that the software meets all requirements","To replace quality assurance activities"],c:1,ex:"Testing's primary purpose is to find defects and provide information about quality."},
 {id:2,ch:1,cn:"Fundamentals of Testing",q:"Which is a valid objective of testing?",o:["To check that the system is fully documented","To gain confidence that the system meets its requirements","To ensure no defects remain in the system","To complete all test cases"],c:1,ex:"One key objective is to gain confidence the system meets requirements."},
 {id:3,ch:1,cn:"Fundamentals of Testing",q:"Which statement about testing and debugging is TRUE?",o:["Testing and debugging are the same","Testing finds defects, debugging removes them","Testing shows presence of defects, debugging identifies causes","Debugging always follows testing immediately"],c:2,ex:"Testing reveals presence of defects; debugging identifies causes and fixes them."},
-{id:4,ch:1,cn:"Fundamentals of Testing",q:"Which is NOT a testing objective according to ISTQB?",o:["Evaluating work products","Gaining confidence in quality","Preventing defects from occurring","Verifying all requirements implemented"],c:2,ex:"Defect prevention is a QA activity, not a testing objective."},
+{id:4,ch:1,cn:"Fundamentals of Testing",q:"Which is NOT a valid testing objective?",o:["Evaluating work products","Gaining confidence in the quality of the system","Proving that all defects have been removed","Reducing the risk level of the test object"],c:2,ex:"Test objectives include evaluating work products, gaining confidence, and reducing risk. It is impossible to prove that all defects have been removed because testing shows the presence of defects, not their absence."},
 {id:5,ch:1,cn:"Fundamentals of Testing",q:"Which describes the fundamental test process?",o:["Test design only after implementation","Planning is one-time activity","Analysis and design are iterative and can overlap","Execution must follow implementation exactly"],c:2,ex:"Fundamental test process activities are iterative and can overlap."},
 {id:6,ch:1,cn:"Fundamentals of Testing",q:"What provides MOST useful quality info to stakeholders?",o:["List of all test cases executed","List of known defects and severity","Description of test environment","Total number of requirements"],c:1,ex:"Defect information helps stakeholders make informed decisions."},
 {id:7,ch:1,cn:"Fundamentals of Testing",q:"What is a risk of not enough testing?",o:["Software may be over-tested","Undiscovered defects may cause production failures","Test team may run out of cases","Dev team may become frustrated"],c:1,ex:"Insufficient testing risks undiscovered defects causing failures."},
 {id:8,ch:1,cn:"Fundamentals of Testing",q:"What is a test level?",o:["A specific type like performance testing","A group of test activities organized together","An individual test case","A phase of the SDLC"],c:1,ex:"A test level groups test activities, e.g., component, integration, system, acceptance."},
 {id:9,ch:1,cn:"Fundamentals of Testing",q:"Who decides what to test at the management level?",o:["Test manager","Project manager","Product owner","Developer"],c:0,ex:"The test manager decides what to test and coordinates activities."},
-{id:10,ch:1,cn:"Fundamentals of Testing",q:"Which is a non-functional quality characteristic?",o:["Correctness","Maintainability","Reliability","All of the above"],c:3,ex:"Reliability and maintainability are non-functional characteristics."},
+{id:10,ch:1,cn:"Fundamentals of Testing",q:"Which is a non-functional quality characteristic?",o:["Performance","Usability","Reliability","All of the above"],c:3,ex:"Performance, usability, and reliability are all non-functional quality characteristics per ISO 25010. Functional correctness belongs to the functional (not non-functional) category."},
 {id:11,ch:1,cn:"Fundamentals of Testing",q:"How does ISTQB define the testing process?",o:["V-Model only","Test levels and the test process","Agile Scrum only","The defect lifecycle"],c:1,ex:"ISTQB defines testing through test levels within the test process."},
-{id:12,ch:1,cn:"Fundamentals of Testing",q:"What is a defect?",o:["A failure observed by end user","A human action producing incorrect result","A deviation between expected and actual results","An error in requirements"],c:2,ex:"A defect is a deviation between expected and actual results."},
+{id:12,ch:1,cn:"Fundamentals of Testing",q:"What is a defect?",o:["A failure observed by the end user","A human action producing an incorrect result","A flaw in a component or system that can cause it to fail","A deviation between expected and actual results"],c:2,ex:"Per the ISTQB Glossary, a defect is a flaw in a component or system that can cause it to fail to perform a required function. A human action producing an incorrect result is an error, and a deviation between expected and actual results is a failure."},
 {id:13,ch:1,cn:"Fundamentals of Testing",q:"What is a test strategy?",o:["Document with scope, approach, resources, schedule","Description of how test objectives will be achieved","Detailed description of a specific test","List of all test cases"],c:1,ex:"A test strategy describes how test objectives will be achieved."},
-{id:14,ch:1,cn:"Fundamentals of Testing",q:"Which is a valid test execution technique?",o:["Equivalence partitioning","Boundary value analysis","Exploratory testing","Decision table testing"],c:2,ex:"Exploratory testing is a test execution technique."},
+{id:14,ch:1,cn:"Fundamentals of Testing",q:"Which is an experience-based test technique?",o:["Equivalence partitioning","Boundary value analysis","Exploratory testing","Decision table testing"],c:2,ex:"Exploratory testing is an experience-based technique that relies on the tester's knowledge, creativity, and intuition. Equivalence partitioning, boundary value analysis, and decision tables are specification-based (black-box) techniques."},
 {id:15,ch:1,cn:"Fundamentals of Testing",q:"What is the primary purpose of regression testing?",o:["Test new functionality","Verify changes haven't adversely affected existing functionality","Validate user acceptance","Test system performance"],c:1,ex:"Regression testing verifies modifications haven't caused adverse effects."},
 {id:16,ch:1,cn:"Fundamentals of Testing",q:"What is a test condition?",o:["An item or event that can be verified","A set of test cases","The execution of a test","A defect found during testing"],c:0,ex:"A test condition is an item verifiable by one or more test cases."},
 {id:17,ch:1,cn:"Fundamentals of Testing",q:"Which about test independence is TRUE?",o:["Independent testers find fewer defects","They may find different defects than developers","They should replace developer testing","They don't need domain knowledge"],c:1,ex:"Independent testers provide different perspective finding different defect types."},
@@ -189,7 +190,7 @@ const QUESTION_BANK=[
 {id:41,ch:1,cn:"Fundamentals of Testing",q:"What is the purpose of a traceability matrix?",o:["Track defects through lifecycle","Map test cases to requirements for coverage","Schedule test activities","Document test environment"],c:1,ex:"A traceability matrix maps test cases to requirements."},
 {id:42,ch:1,cn:"Fundamentals of Testing",q:"What is a benefit of independent testing?",o:["Testers work faster","Brings objective perspective","Don't need requirement understanding","Always reduces costs"],c:1,ex:"Independent testing provides objective perspective separate from development."},
 {id:43,ch:1,cn:"Fundamentals of Testing",q:"Primary concern of software quality?",o:["Speed of development","Conformity to specified requirements","Number of features","Cost of development"],c:1,ex:"Quality is degree of conformity to requirements and fitness for purpose."},
-{id:44,ch:1,cn:"Fundamentals of Testing",q:"Which is an acceptance criterion?",o:["System responds within 3 seconds","Code has 90% unit test coverage","All test cases pass","Defect rate below 1 per KLOC"],c:0,ex:"Acceptance criteria are measurable conditions for acceptance."},
+{id:44,ch:1,cn:"Fundamentals of Testing",q:"Which is an example of an acceptance criterion?",o:["The team estimates the story at 5 story points","Valid users can log in, and a logged-in user can view the customer list","The regression suite runs nightly","The code is reviewed by at least two developers"],c:1,ex:"An acceptance criterion describes a concrete, testable condition that must be met for the object to be accepted - here, a scenario a user must be able to perform. Estimates, nightly regression runs, or review counts are project constraints, not acceptance criteria."},
 {id:45,ch:1,cn:"Fundamentals of Testing",q:"What is 'testware'?",o:["Hardware for testing","All artifacts produced during testing","Test automation tools only","Test environment config"],c:1,ex:"Testware is all artifacts produced during the testing process."},
 {id:46,ch:1,cn:"Fundamentals of Testing",q:"MOST important factor for test completion criteria?",o:["Date testing started","Risk level and test objectives","Number of test cases available","Size of test team"],c:1,ex:"Completion criteria should be based on risk levels and test objectives."},
 {id:47,ch:1,cn:"Fundamentals of Testing",q:"Which validates system meets user needs?",o:["Component testing","Integration testing","Acceptance testing","Regression testing"],c:2,ex:"Acceptance testing validates system meets user needs and requirements."},
@@ -299,7 +300,6 @@ const QUESTION_BANK=[
 {id:148,ch:2,cn:"Testing Throughout SDLC",q:"What is blue-green deployment?",o:["Color-coding test cases","Two identical environments for instant rollback if testing fails","Testing in blue environments only","Performance test type"],c:1,ex:"Blue-green runs two identical environments for instant rollback."},
 {id:149,ch:2,cn:"Testing Throughout SDLC",q:"Role of A/B testing in SDLC?",o:["Replace regression testing","Compare two versions to determine better user performance","Test alphabet","Unit testing"],c:1,ex:"A/B testing compares two versions with real users."},
 {id:150,ch:2,cn:"Testing Throughout SDLC",q:"What is 'canary testing'?",o:["Testing with large groups","Deploying to small user subset first before full rollout","Testing only on Linux","Automated unit testing"],c:1,ex:"Canary testing deploys to small subset first, monitoring for issues."},
-]
 
 
 // === CHAPTER 3: STATIC TESTING (~45 questions) ===
@@ -373,19 +373,18 @@ const QUESTION_BANK=[
 {id:248,ch:3,cn:"Static Testing",q:"Example of 'code convention'?",o:["Variable naming convention (camelCase)","Test execution order","Deployment procedure","Requirements format"],c:0,ex:"Code conventions include naming, formatting, comments, and structure guidelines."},
 {id:249,ch:3,cn:"Static Testing",q:"What is 'review meeting agenda'?",o:["List of attendees","Outline of topics to be covered","Project schedule","Test case list"],c:1,ex:"An agenda outlines topics, time allocations, and discussion points."},
 {id:250,ch:3,cn:"Static Testing",q:"Difference between syntax and semantic checking?",o:["They are the same","Syntax checks structure; semantic checks meaning and logic","Syntax for runtime; semantic for compile time","Syntax manual; semantic automated"],c:1,ex:"Syntax checks structure; semantic checks meaning and logic."},
-]
 
 
 // === CHAPTER 4: TEST ANALYSIS AND DESIGN (~100 questions) ===
 {id:281,ch:4,cn:"Test Analysis and Design",q:"What is test analysis?",o:["Running test cases","Identifying what to test and creating test conditions","Documenting test results","Fixing defects"],c:1,ex:"Test analysis identifies what to test by analyzing test basis documents."},
 {id:282,ch:4,cn:"Test Analysis and Design",q:"Which is a black-box test design technique?",o:["Statement testing","Decision testing","Equivalence partitioning","Path testing"],c:2,ex:"Equivalence partitioning is black-box based on inputs/outputs."},
 {id:283,ch:4,cn:"Test Analysis and Design",q:"Purpose of boundary value analysis?",o:["Test all values in range","Test values at boundaries where defects often occur","Test only middle value","Test random values"],c:1,ex:"BVA tests at boundaries where defects are most likely."},
-{id:284,ch:4,cn:"Test Analysis and Design",q:"What is a test condition?",o:["Specific input value","An item or feature to be tested","Result of a test","Test tool"],c:1,ex:"A test condition is an item or feature to be tested."},
+{id:284,ch:4,cn:"Test Analysis and Design",q:"What is a primary output of test analysis?",o:["Detailed test execution logs","A set of test conditions and prioritized items to test","The final test summary report","The project schedule"],c:1,ex:"Test analysis identifies what to test by analyzing the test basis, producing test conditions and prioritized testable items for downstream test design."},
 {id:285,ch:4,cn:"Test Analysis and Design",q:"Which technique uses decision tables?",o:["Equivalence partitioning","Decision table testing","State transition testing","Statement testing"],c:1,ex:"Decision table testing creates tests from condition/action combinations."},
 {id:286,ch:4,cn:"Test Analysis and Design",q:"Purpose of use case testing?",o:["Test individual functions","Test end-to-end business scenarios","Test only UI","Test only non-functional"],c:1,ex:"Use case testing tests end-to-end business scenarios."},
 {id:287,ch:4,cn:"Test Analysis and Design",q:"What is a test case?",o:["A defect","Set of inputs, execution conditions, and expected results","Test tool","Test environment"],c:1,ex:"A test case defines inputs, conditions, expected results, and criteria."},
 {id:288,ch:4,cn:"Test Analysis and Design",q:"Difference between verification and validation test cases?",o:["Same thing","Verification tests specs conformance; validation tests fitness for use","Verification for devs only","Validation for testers only"],c:1,ex:"Verification confirms specs conformance; validation confirms fitness for use."},
-{id:289,ch:4,cn:"Test Analysis and Design",q:"What is equivalence partitioning?",o:["Dividing inputs into groups expected to be treated equally","Testing at boundaries","Using decision tables","State-based testing"],c:0,ex:"EP divides inputs into partitions with expected equal behavior."},
+{id:289,ch:4,cn:"Test Analysis and Design",q:"What is the MAIN benefit of using equivalence partitioning?",o:["Guarantees 100% code coverage","Reduces the number of test cases while maintaining equivalent coverage","Eliminates the need for boundary value analysis","Tests every possible input value"],c:1,ex:"Equivalence partitioning reduces the number of test cases by testing one representative value from each partition that is expected to behave the same way."},
 {id:290,ch:4,cn:"Test Analysis and Design",q:"What is a white-box test technique?",o:["Equivalence partitioning","Statement coverage testing","Boundary value analysis","Use case testing"],c:1,ex:"Statement coverage is a white-box technique using code structure."},
 {id:291,ch:4,cn:"Test Analysis and Design",q:"What is decision coverage (branch coverage)?",o:["Testing all requirements","Testing all decision outcomes (true/false)","Testing all paths","Testing all statements"],c:1,ex:"Decision coverage ensures every decision outcome is tested."},
 {id:292,ch:4,cn:"Test Analysis and Design",q:"What is a test procedure?",o:["A single test case","Description of how to execute one or more test cases","A defect report","A test tool"],c:1,ex:"A test procedure describes how to execute test cases."},
@@ -401,7 +400,7 @@ const QUESTION_BANK=[
 {id:302,ch:4,cn:"Test Analysis and Design",q:"What is the purpose of a test charter?",o:["Legal authority","Guide exploratory testing sessions with scope and goals","A test case template","A defect report"],c:1,ex:"A test charter guides exploratory testing with scope, goals, and resources."},
 {id:303,ch:4,cn:"Test Analysis and Design",q:"What is session-based test management?",o:["Managing all testing sessions","Approach to manage exploratory testing with time-boxed sessions","Session recording tool","Meeting management"],c:1,ex:"Session-based management uses time-boxed sessions for exploratory testing."},
 {id:304,ch:4,cn:"Test Analysis and Design",q:"What is combinatorial testing?",o:["Combining testers","Testing combinations of input parameters","Combining test tools","Combining test environments"],c:1,ex:"Combinatorial testing tests combinations of input parameters."},
-{id:305,ch:4,cn:"Test Analysis and Design",q:"What is a 'test scenario'?",o:["Detailed steps","High-level description of what to test","Test environment","Test data set"],c:1,ex:"A test scenario is a high-level description of what to be tested."},
+{id:305,ch:4,cn:"Test Analysis and Design",q:"What is a 'test session' in session-based testing?",o:["A formal project meeting","A time-boxed period of focused, uninterrupted exploratory testing guided by a charter","A daily stand-up","A full regression cycle"],c:1,ex:"A test session is a time-boxed period of focused, uninterrupted exploratory testing driven by a test charter, central to session-based test management."},
 {id:306,ch:4,cn:"Test Analysis and Design",q:"What is a test data requirement?",o:["The test environment","Specific data needed to execute test cases","The test tool","The defect report"],c:1,ex:"Test data requirements define the specific data needed for test execution."},
 {id:307,ch:4,cn:"Test Analysis and Design",q:"What is a 'feature list' in test analysis?",o:["Marketing features","List of all features to be tested from the requirements","List of test tools","List of testers"],c:1,ex:"A feature list enumerates all features from requirements to be tested."},
 {id:308,ch:4,cn:"Test Analysis and Design",q:"What is 'requirement traceability'?",o:["Tracing test execution","Mapping requirements to test cases for coverage","Tracing defects","Tracing project budget"],c:1,ex:"Requirement traceability maps requirements to test cases for coverage analysis."},
@@ -447,7 +446,6 @@ const QUESTION_BANK=[
 {id:358,ch:4,cn:"Test Analysis and Design",q:"What is 'state-based testing'?",o:["Testing the system state","Testing based on state transitions of the system","State of the test environment","State of test data"],c:1,ex:"State-based testing uses state transition models to design tests."},
 {id:359,ch:4,cn:"Test Analysis and Design",q:"What is 'scenario testing'?",o:["Testing movie scenarios","Testing end-to-end business scenarios","Testing user scenarios only","Testing development scenarios"],c:1,ex:"Scenario testing tests realistic end-to-end business scenarios."},
 {id:360,ch:4,cn:"Test Analysis and Design",q:"What is 'workflow testing'?",o:["Testing office workflows","Testing business workflows end-to-end","Testing development workflow","Testing test workflow"],c:1,ex:"Workflow testing verifies business workflows function correctly end-to-end."},
-]
 
 
 // === CHAPTER 5: MANAGING TEST ACTIVITIES (~45 questions) ===
@@ -462,13 +460,13 @@ const QUESTION_BANK=[
 {id:159,ch:5,cn:"Managing Test Activities",q:"What is 'shift-left security testing'?",o:["Security testing only in production","Integrating security testing early in SDLC","Removing security tests","Testing security at end"],c:1,ex:"Shift-left security integrates testing early for cheaper vulnerability fixes."},
 {id:160,ch:5,cn:"Managing Test Activities",q:"Benefit of test data management?",o:["Unnecessary","Ensures realistic, consistent, compliant test data","Eliminates test environments","Replaces test case management"],c:1,ex:"Test data management ensures realistic, consistent, compliant test data."},
 {id:361,ch:5,cn:"Managing Test Activities",q:"What is test planning?",o:["Writing test cases","Defining scope, objectives, approach, resources, schedule for testing","Executing tests","Fixing defects"],c:1,ex:"Test planning defines scope, objectives, approach, resources, and schedule."},
-{id:362,ch:5,cn:"Managing Test Activities",q:"What is a 'test plan'?",o:["A test case list","Document defining scope, approach, resources, schedule, risks","A defect report","A test tool"],c:1,ex:"A test plan is a formal document defining all aspects of the testing approach."},
+{id:362,ch:5,cn:"Managing Test Activities",q:"What is a test execution schedule?",o:["A list of testers' names shown by seniority","A specification of when tests are run and in what order","A defect priority ranking","A code coverage report"],c:1,ex:"A test execution schedule specifies the timing and order in which test cases are to be executed, plus any dependencies between them."},
 {id:363,ch:5,cn:"Managing Test Activities",q:"What is 'test monitoring'?",o:["Running tests","Collecting and reporting status of testing activities","Managing test tools","Writing test reports"],c:1,ex:"Test monitoring collects and reports on testing progress and status."},
 {id:364,ch:5,cn:"Managing Test Activities",q:"What is 'test control'?",o:["Controlling the test environment","Taking corrective actions to keep testing on track","Controlling test tools","Managing test data"],c:1,ex:"Test control takes corrective actions to keep testing aligned with plan."},
 {id:365,ch:5,cn:"Managing Test Activities",q:"What is a 'risk register'?",o:["List of test cases","Document listing identified risks with analysis and mitigation","Defect tracking tool","Test plan"],c:1,ex:"A risk register documents identified risks, their analysis, and mitigation plans."},
 {id:366,ch:5,cn:"Managing Test Activities",q:"What is 'test estimation'?",o:["Counting test cases","Predicting effort, time, and resources needed for testing","Estimating defect count","Estimating project cost"],c:1,ex:"Test estimation predicts the effort, time, and resources needed."},
 {id:367,ch:5,cn:"Managing Test Activities",q:"Which estimation technique uses expert judgment?",o:["Function point analysis","Wideband Delphi","Lines of code counting","Test case counting"],c:1,ex:"Wideband Delphi is a consensus-based expert estimation technique."},
-{id:368,ch:5,cn:"Managing Test Activities",q:"What is a 'defect lifecycle'?",o:["Test case lifecycle","Process from defect discovery to resolution and closure","Test plan lifecycle","Release lifecycle"],c:1,ex:"The defect lifecycle tracks defects from discovery through resolution."},
+{id:368,ch:5,cn:"Managing Test Activities",q:"What does a defect status of 'OPEN' typically mean?",o:["The defect has been fixed and verified","The defect is reported but not yet resolved","The defect could not be reproduced","The defect was rejected as not a real issue"],c:1,ex:"In the defect lifecycle, OPEN means the defect has been reported and is awaiting analysis or resolution."},
 {id:369,ch:5,cn:"Managing Test Activities",q:"What is 'defect severity'?",o:["Priority of fixing","Impact of the defect on the system","How many people found it","How long it takes to fix"],c:1,ex:"Defect severity measures the impact of the defect on the system."},
 {id:370,ch:5,cn:"Managing Test Activities",q:"What is 'defect priority'?",o:["How severe the defect is","Urgency of fixing the defect","Number of test cases","Test coverage level"],c:1,ex:"Defect priority indicates the urgency of fixing the defect."},
 {id:371,ch:5,cn:"Managing Test Activities",q:"What is a 'test metrics' dashboard?",o:["A test case list","Visual display of key testing metrics and KPIs","A defect report","A test plan"],c:1,ex:"A metrics dashboard visualizes key testing metrics for stakeholder visibility."},
@@ -501,7 +499,6 @@ const QUESTION_BANK=[
 {id:398,ch:5,cn:"Managing Test Activities",q:"What is 'defect discovery rate'?",o:["Speed of finding defects","Number of defects found per unit of time","Rate of fixing defects","Defect rejection rate"],c:1,ex:"Defect discovery rate measures how quickly defects are being found."},
 {id:399,ch:5,cn:"Managing Test Activities",q:"What is 'test documentation'?",o:["Only test cases","All documents created during the testing process","Only test reports","Only defect reports"],c:1,ex:"Test documentation includes all artifacts produced during testing."},
 {id:400,ch:5,cn:"Managing Test Activities",q:"What is a 'quality gate'?",o:["Physical gate","Checkpoint where quality criteria must be met before proceeding","Quality tool","Quality metric"],c:1,ex:"A quality gate is a checkpoint ensuring quality criteria before next phase."},
-]
 
 
 // === CHAPTER 6: TOOL SUPPORT FOR TESTING (~20 questions) ===
@@ -518,13 +515,69 @@ const QUESTION_BANK=[
 {id:411,ch:6,cn:"Tool Support for Testing",q:"What is a 'static analysis tool'?",o:["Tool for dynamic analysis","Tool that analyzes code without execution","Tool for runtime analysis","Performance analysis tool"],c:1,ex:"Static analysis tools examine code without execution for defects and standards."},
 {id:412,ch:6,cn:"Tool Support for Testing",q:"What is a 'mock object'?",o:["Fake person","Test double that simulates behavior of real components","Mock data only","Test documentation mock"],c:1,ex:"Mock objects simulate real component behavior for isolated testing."},
 {id:413,ch:6,cn:"Tool Support for Testing",q:"What is a 'virtual test environment'?",o:["Physical lab","Software-emulated test environment","Virtual reality testing","Online test environment"],c:1,ex:"Virtual test environments use software emulation instead of physical hardware."},
-{id:414,ch:6,cn:"Tool Support for Testing",q:"What is a 'test harness'?",o:["Physical harness","Collection of software and data to test a component","Safety harness","Cable harness"],c:1,ex:"A test harness provides the framework and support for test execution."},
+{id:414,ch:6,cn:"Tool Support for Testing",q:"What is a 'tool pilot'?",o:["A short-term trial of a test tool to evaluate its suitability for the project","A tool that executes flights","The first automated test case written","A sales representative of a tool vendor"],c:0,ex:"A pilot (or trial) is a short, small-scale deployment of a tool to evaluate its suitability, benefits, and risks before full adoption."},
 {id:415,ch:6,cn:"Tool Support for Testing",q:"What is 'service virtualization'?",o:["Virtual services","Simulation of unavailable services for testing","Service management","Virtual meetings"],c:1,ex:"Service virtualization simulates unavailable services to enable testing."},
 {id:416,ch:6,cn:"Tool Support for Testing",q:"What is a 'test automation engineer'?",o:["Test tool","Person who designs, develops, and maintains automated tests","Test manager","Developer"],c:1,ex:"A test automation engineer designs, develops, and maintains automated tests."},
 {id:417,ch:6,cn:"Tool Support for Testing",q:"What is a 'CI/CD pipeline tool'?",o:["Plumbing tool","Tool automating build, test, and deployment pipeline","Test management tool","Code editor"],c:1,ex:"CI/CD pipeline tools automate the entire delivery process."},
 {id:418,ch:6,cn:"Tool Support for Testing",q:"What is an 'API testing tool'?",o:["Tool for testing network cables","Tool for testing application programming interfaces","API documentation tool","API design tool"],c:1,ex:"API testing tools test application programming interfaces directly."},
 {id:419,ch:6,cn:"Tool Support for Testing",q:"What is a 'mobile testing tool'?",o:["Phone accessory","Tool designed for testing mobile applications","Mobile device management","Mobile app development tool"],c:1,ex:"Mobile testing tools support testing on various mobile devices and platforms."},
 {id:420,ch:6,cn:"Tool Support for Testing",q:"What is 'test environment management'?",o:["Managing test cases","Managing and maintaining test environments for testing","Managing test tools","Managing test data"],c:1,ex:"Test environment management maintains and controls test environments."},
+// ==== MULTI-SELECT QUESTIONS (based on official ISTQB sample exams) ====
+{id:501,ch:1,cn:"Fundamentals of Testing",multi:true,q:"Which TWO of the following activities belong MAINLY to the testing role?",o:["Configure test environments","Maintain the product backlog","Design solutions for new requirements","Create the test plan","Analyze the test basis"],c:[0,4],ex:"Configuring test environments and analyzing the test basis are tasks that belong mainly to a testing role. Maintaining the product backlog, designing new solutions, and creating the test plan are development/management tasks."},
+{id:502,ch:1,cn:"Fundamentals of Testing",multi:true,q:"Which TWO of the following are exit criteria for testing a system?",o:["Test environment readiness","The tester can log in to the test object","The estimated defect density has been reached","Acceptance criteria are written in given/when/then format","Regression tests have been automated"],c:[2,4],ex:"Reaching the estimated defect density and automating regression tests are exit criteria. Environment readiness and the ability to log in are entry (precondition) items, and the given/when/then format is a documentation practice, not an exit criterion."},
+{id:503,ch:2,cn:"Testing Throughout SDLC",multi:true,q:"You are a tester on a V-model project. Which TWO of the following activities CAN be performed in the initial phases of the SDLC?",o:["Dynamic test execution","Static testing","Test planning","Acceptance test execution","Maintenance testing"],c:[1,2],ex:"Static testing (e.g., reviewing requirements) and test planning can start early, before code exists. Dynamic execution, acceptance testing, and maintenance testing all occur in later phases."},
+{id:504,ch:5,cn:"Managing Test Activities",multi:true,q:"Which TWO of the following metrics are commonly used to report on the quality level of the test object?",o:["Number of defects found during system testing","Effort spent on test design divided by the number of test cases designed","Number of executed test procedures","Number of defects found divided by the size of the work product","Time needed to repair a defect"],c:[0,3],ex:"The number of defects found during system testing and the defect density (defects divided by work product size) measure the quality of the test object. The other options measure efficiency, coverage, or fix time instead."},
+{id:505,ch:4,cn:"Test Analysis and Design",multi:true,q:"Which TWO of the following provide the BEST rationale for using exploratory testing?",o:["Testers have not been given enough time for formal test design and test execution","The test strategy requires formal black-box techniques","The specification is written in a formal language that a tool can process","Testers only need good programming skills","Testers are experienced in the business domain and have good analytical skills"],c:[0,4],ex:"Exploratory testing suits situations with little time for formal design or poorly documented requirements, and it is most effective when testers are experienced and have domain and analytical skills."},
+{id:506,ch:4,cn:"Test Analysis and Design",multi:true,q:"Which TWO of the following test activities MOST likely involve applying boundary value analysis and equivalence partitioning?",o:["Test implementation","Test design","Test execution","Test monitoring","Test analysis"],c:[1,4],ex:"Boundary value analysis and equivalence partitioning are test techniques applied during test analysis (identifying test conditions) and test design (creating test cases)."},
+{id:507,ch:4,cn:"Test Analysis and Design",multi:true,q:"A system applies a discount based on the customer's age D: students (0 to 17), no discount (18 to 64), pensioners (65 and over). The current test suite already covers the 'no discount' partition and an invalid age. Which TWO ages must still be added to achieve full valid equivalence partitioning coverage of the discount type?",o:["Age = 10","Age = 2000","Age = 65","Age = -1","Age = 40"],c:[0,2],ex:"To cover all valid partitions you still need one student (e.g., age 10) and one pensioner (e.g., age 65). The 'no discount' partition and the invalid case are already covered by the existing test cases."},
+{id:508,ch:5,cn:"Managing Test Activities",multi:true,q:"Which TWO of the following BEST define EXIT criteria in a testing project?",o:["The budget has been approved","The budget runs out","The test basis is available","Test cases have achieved at least 80% statement coverage","All test analysts are ISTQB certified"],c:[1,3],ex:"Budget exhaustion and achieving the 80% statement coverage target are exit criteria - measurable conditions for stopping or completing testing. Budget approval, test basis availability, and tester certification are entry/set-up conditions."},
+{id:509,ch:5,cn:"Managing Test Activities",multi:true,q:"Which TWO of the following are product risks?",o:["Scope creep","Poor architecture","Cost-cutting","Poor tool support","Too long response time"],c:[1,4],ex:"Poor architecture and too long response times concern the product itself, so they are product risks. Scope creep, cost-cutting, and poor tool support are project risks."},
+// ==== HARD QUESTIONS (application-level / K3 + tricky matching; based on official ISTQB sample exams) ====
+{id:601,ch:4,cn:"Test Analysis and Design",hard:true,q:"A search form has two fields: floor (ground, first, second or higher) and garden type (none, small, large). Every ground-floor apartment has a garden and no upper-floor apartment does, and the form forces this rule. Applying equivalence partitioning, what is the MINIMUM number of test cases for 100% valid EP coverage?",o:["3","4","5","6"],c:1,ex:"Only 4 valid combinations exist (ground+small, ground+large, first+none, second/higher+none), so 4 test cases achieve 100% valid EP coverage."},
+{id:602,ch:4,cn:"Test Analysis and Design",hard:true,q:"A car-wash loyalty card counts washed cars (starting at 0; each wash adds 1). On every 10th wash the customer gets a 10% discount and on every 20th wash a further 40% discount (50% total). Which set of current-wash numbers achieves the HIGHEST equivalence partitioning coverage?",o:["19, 20, 30","11, 12, 20","1, 10, 50","10, 29, 30, 31"],c:0,ex:"The partitions are 'no discount', '10% discount' (10th, 30th, ...) and '50% discount' (20th, 40th, ...). Inputs 19, 20 and 30 cover all three valid partitions, the highest coverage."},
+{id:603,ch:4,cn:"Test Analysis and Design",hard:true,q:"A grading system assigns: 0-50 failed, 51-60 fair, 61-70 satisfactory, 71-80 good, 81-90 very good, 91-100 excellent. Existing test cases use final results 91, 50, 81, 60, 70 and 80. What is the 2-value boundary value analysis coverage achieved for the final result?",o:["50%","60%","33.3%","100%"],c:0,ex:"The 12 boundary values are 0,50,51,60,61,70,71,80,81,90,91,100. The six existing tests cover exactly six of them, i.e., 6/12 = 50%."},
+{id:604,ch:4,cn:"Test Analysis and Design",hard:true,q:"A form accepts passwords of length 6-12 characters inclusive and rejects others (invalid length starts at 0). Your tests already achieve 100% 2-value boundary value analysis on the password length. Which additional lengths must be tested to also achieve 100% 3-value boundary value analysis?",o:["4, 5, 13, 14","7, 11","1, 5, 13","1, 4, 7, 11, 14"],c:3,ex:"2-value BVA covers 0, 5, 6, 12, 13. For 3-value BVA you must add 1 (for boundary 0), 4 (for 5), 7 and 11 (inner neighbours of 6 and 12) and 14 (for 13): i.e., 1, 4, 7, 11, 14."},
+{id:605,ch:4,cn:"Test Analysis and Design",hard:true,q:"A component implements the rule: if value is 100 or less, or 200 or more, write 'value incorrect'; otherwise write 'value OK' (value is an integer). Using 2-value boundary value analysis, which input set achieves the GREATEST coverage?",o:["100, 150, 200, 201","99, 100, 200, 201","98, 99, 100, 101","101, 150, 199, 200"],c:3,ex:"The boundary coverage items are 100, 101, 199 and 200. Only set d covers three of them (101, 199, 200) = 75%, the maximum achievable."},
+{id:606,ch:4,cn:"Test Analysis and Design",hard:true,q:"A temperature control system displays 'temperature OK' for inputs between 0 and 2 inclusive, 'too low' below 0, and 'too high' above 2. Using two-value boundary value analysis, which input set provides the HIGHEST coverage?",o:["-1, 3","0, 2","-1, 0, 2, 3","-2, 0, 2, 4"],c:2,ex:"The boundary values are 0 and 2 plus their neighbours -1 and 3. Set c covers all four: -1, 0, 2, 3."},
+{id:607,ch:4,cn:"Test Analysis and Design",hard:true,q:"A thermostat turns on heating below 70 degrees, air conditioning above 75 degrees, and the fan only between 70 and 75 inclusive. Which set of temperature values achieves 100% two-value boundary value analysis coverage?",o:["70, 75","65, 72, 80","69, 70, 75, 76","70, 71, 74, 75, 76"],c:2,ex:"Two-value BVA requires each boundary pair: 69, 70 (heating/fan boundary) and 75, 76 (fan/AC boundary)."},
+{id:608,ch:4,cn:"Test Analysis and Design",hard:true,q:"A shipping rate system uses weight ranges 0-10, 11-25, 26-50 and 51-100 lbs (100 lbs is the legal maximum; nothing may exceed it). How many tests are needed for 100% two-value boundary value analysis?",o:["4","8","10","12"],c:2,ex:"Four ranges give 8 boundary tests (lower and upper bound of each) plus -1 (invalid low) and 101 (invalid high) = 10 tests."},
+{id:609,ch:4,cn:"Test Analysis and Design",hard:true,q:"A PIN validator accepts a PIN that has four digits and that is not all the same digit. Identified partitions: length correct / length incorrect, and number of different digits correct / incorrect. Which input set BEST covers these partitions?",o:["12, 1111, 1234, 12345","1, 123, 1111, 1234","11, 12, 1111, 12345","123, 1222, 12345"],c:0,ex:"12 (length incorrect), 1111 (length correct but all-same digits), 1234 (valid), 12345 (length incorrect) together cover both variables' valid and invalid partitions."},
+{id:610,ch:4,cn:"Test Analysis and Design",hard:true,q:"An exam scoring machine assigns grades: 1-49 = F, 50-59 = D-, 60-69 = D, 70-79 = C, 80-89 = B, 90-100 = A. Using equivalence partitioning, how many test cases are needed for minimum EP coverage?",o:["6","8","10","12"],c:1,ex:"Six valid grade partitions (F, D-, D, C, B, A) plus an invalid too-low score and an invalid too-high score = 8 test cases."},
+{id:611,ch:4,cn:"Test Analysis and Design",hard:true,q:"A banking app lets a customer withdraw 20, 100 or 500 dollars from a drop-down list; no other value may be entered. How many equivalence partitions must be tested for 100% EP coverage?",o:["1","2","3","4"],c:3,ex:"Three valid partitions (20, 100, 500) plus the invalid 'no other selection' partition = 4 partitions in total."},
+{id:612,ch:4,cn:"Test Analysis and Design",hard:true,q:"A decision table of 5 rules determines a cholesterol risk level (very low, low, medium, high, very high) from cholesterol (<=124, 125-200, >=201) and blood pressure (<=140, >140). Existing test cases cover only rules R2, R4 and R5. What decision table coverage is achieved?",o:["40%","60%","80%","100%"],c:1,ex:"Decision table coverage counts covered columns: 3 of the 5 rules are exercised, so coverage = 60%."},
+{id:613,ch:4,cn:"Test Analysis and Design",hard:true,q:"A driving-license decision table has conditions C1 (first attempt), C2 (theoretical exam passed), C3 (practical exam passed), where '-' means 'don't care'. Which input combination reveals that the rules are contradictory?",o:["C1=T, C2=T, C3=F","C1=T, C2=F, C3=T","C1=T, C2=T, C3=T and C1=F, C2=T, C3=T","C1=F, C2=F, C3=F"],c:3,ex:"The combination C1=F, C2=F, C3=F matches two different rules that specify different actions, which exposes the contradiction."},
+{id:614,ch:4,cn:"Test Analysis and Design",hard:true,q:"A decision table assigns a category using age, experience and registration status (rules R1-R7: age 0-18 / 19-65 / >65; unregistered or registered; experience 0-4 / >4). Existing test cases already cover rules R2, R3, R6 and R7. Which ADDITIONAL test case increases decision table coverage?",o:["66-year-old unregistered man with no experience","55-year-old unregistered woman with 2 years of experience","19-year-old registered woman with 5 years of experience","No additional test case can increase coverage"],c:0,ex:"The 66-year-old unregistered person with no experience maps to the uncovered rule R4 (age >65, unregistered). The other options hit already-covered rules."},
+{id:615,ch:4,cn:"Test Analysis and Design",hard:true,q:"A system modeled as a state transition diagram starts in INIT and ends in OFF. Because some transitions (the 'test'/'error' pair and both 'done' transitions) cannot occur in the same test case, what is the MINIMUM number of test cases needed for 100% valid transitions coverage?",o:["4","2","7","3"],c:3,ex:"Three transitions can never be covered in one run, so at least 3 test cases are required for full valid-transitions coverage."},
+{id:616,ch:4,cn:"Test Analysis and Design",hard:true,q:"A storage system can store up to three elements. Which sequence of events achieves the HIGHEST level of valid transitions coverage?",o:["Add, Remove, Add, Add, Add","Add, Add, Add, Add, Remove, Remove","Add, Add, Add, Remove, Remove","Add, Add, Add, Remove, Add"],c:2,ex:"The sequence Add, Add, Add, Remove, Remove covers all 5 valid transitions (a fourth Add is invalid because the store is full, so option b is not fully valid)."},
+{id:617,ch:4,cn:"Test Analysis and Design",hard:true,q:"For a state transition diagram where three transitions can never appear in the same test case, what is the MINIMUM number of test cases to achieve 100% valid transitions coverage?",o:["3","2","5","6"],c:0,ex:"Three transitions that cannot be combined force at least three separate test cases."},
+{id:618,ch:4,cn:"Test Analysis and Design",hard:true,q:"A hotel room reservation system has states Requesting, Confirmed, Waiting list, End and transitions triggered by Available, NotAvailable, ChangeRoom, Cancel and Pay. Assuming a test always starts in the Requesting state, which event sequence achieves the HIGHEST valid transitions coverage?",o:["NotAvailable, Available, ChangeRoom, NotAvailable, Cancel","Available, ChangeRoom, NotAvailable, Available, Pay","Available, ChangeRoom, Available, ChangeRoom, NotAvailable","NotAvailable, Cancel, ChangeRoom, Available, Pay"],c:1,ex:"Sequence b exercises 5 of the 7 valid transitions (the highest); option d is infeasible because Cancel moves to the End state, from which no further valid transitions exist."},
+{id:619,ch:4,cn:"Test Analysis and Design",hard:true,q:"Two test cases, T1 and T2, run on the same code. T1 achieves 40% statement coverage and T2 achieves 65%. Which statement must necessarily be TRUE?",o:["The suite of T1 and T2 achieves 105% statement coverage","At least one statement must have been executed by both T1 and T2","At least 5% of the code is non-executable","The suite achieves full branch coverage"],c:1,ex:"Total coverage cannot exceed 100%, so the statement sets executed by T1 and T2 cannot be disjoint; at least 40% + 65% - 100% = 5% of statements ran in both."},
+{id:620,ch:4,cn:"Test Analysis and Design",hard:true,q:"You apply branch testing to code represented by a control flow graph that contains 8 edges. How many coverage items (branches) must be tested for 100% branch coverage?",o:["2","4","8","7"],c:2,ex:"In branch testing the coverage items are the edges of the control flow graph, so all 8 edges must be exercised."},
+{id:621,ch:5,cn:"Managing Test Activities",hard:true,q:"Your team uses the three-point estimation technique with a most optimistic value of 2 person-hours, a most likely value of 11 person-hours and a most pessimistic value of 14 person-hours. What is the final estimate?",o:["9 person-hours","14 person-hours","11 person-hours","10 person-hours"],c:3,ex:"E = (2 + 4x11 + 14) / 6 = 60 / 6 = 10 person-hours."},
+{id:622,ch:5,cn:"Managing Test Activities",hard:true,q:"Using estimation based on ratios, you average the test-to-development effort ratio from four similar historical projects and get a roughly 1:10 test-to-development ratio. The estimated development effort for the new project is $800,000. What is your test effort estimate?",o:["$40,000","$80,000","$81,250","$82,500"],c:1,ex:"Test effort is estimated as 10% of the development effort: 10% of $800,000 = $80,000."},
+{id:623,ch:5,cn:"Managing Test Activities",hard:true,q:"One tester must execute four test cases. For a single test case the best-case estimate is 1 hour, the worst-case is 8 hours and the most likely is 3 hours. Using three-point estimation, what is the total estimate for all four test cases?",o:["14 hours","3.5 hours","16 hours","12 hours"],c:0,ex:"Per test case: E = (1 + 4x3 + 8) / 6 = 3.5 hours. Four test cases: 4 x 3.5 = 14 hours."},
+{id:624,ch:5,cn:"Managing Test Activities",hard:true,q:"Three experts estimated the testing time for a new project as 30, 55 and 75 days. Applying the three-point estimation technique, what is the estimate and its standard deviation?",o:["325 ± 45","81.25 ± 8","54.17 ± 7.5","40 ± 2"],c:2,ex:"E = (30 + 4x55 + 75) / 6 = 54.17; standard deviation = (75 - 30) / 6 = 7.5."},
+{id:625,ch:5,cn:"Managing Test Activities",hard:true,q:"From the third iteration, a team estimates iteration work using the model E(n) = (3 x A(n-1) + A(n-2)) / 4, where A(k) is the actual work of iteration k. Given actuals A(4) = 6 and A(3) = 8 person-days, what is the estimate for iteration 5?",o:["10.5 person-days","8.25 person-days","6.5 person-days","9.4 person-days"],c:2,ex:"E(5) = (3 x 6 + 8) / 4 = 26 / 4 = 6.5 person-days."},
+{id:626,ch:5,cn:"Managing Test Activities",hard:true,q:"You must execute restaurant-finder test cases by priority (1 = highest) and logical dependency: TC1 select food (priority 3), TC2 select restaurant (priority 2, needs TC1), TC3 get directions (priority 1, needs TC2), TC4 call restaurant (priority 2, needs TC2), TC5 make reservation (priority 3, needs TC2). Which test case is executed THIRD?",o:["TC 003","TC 005","TC 002","TC 001"],c:0,ex:"Honoring priority and dependencies the order is TC1, TC2, TC3, so TC3 is executed third."},
+{id:627,ch:5,cn:"Managing Test Activities",hard:true,q:"A web app supports SEARCH, VIEW, ADD to cart and ORDER. You have seven test cases with priority (1 = highest): TC1 SEARCH A (P4), TC2 SEARCH B (P4), TC3 VIEW A details (P3), TC4 VIEW B details (P2), TC5 ADD A to cart (P3), TC6 ADD B to cart (P1), TC7 ORDER (P5). Dependencies: SEARCH must be tested before VIEW, VIEW before ADD, ADD before ORDER. In the best execution order, which test case is executed FOURTH?",o:["TC3","TC1","TC7","TC2"],c:1,ex:"Respecting priority and dependencies the order is TC2, TC4, TC6, TC1, TC3, TC5, TC7, so TC1 is executed fourth."},
+{id:628,ch:5,cn:"Managing Test Activities",hard:true,q:"A traceability matrix maps four test cases to requirements: TC1 covers Req1-4, TC2 covers Req1-3, TC3 covers Req5-6 and TC4 covers Req2. Applying additional-coverage prioritization (a test is executed as soon as possible when it adds the most new requirement coverage), which test case is executed LAST?",o:["TC1","TC2","TC3","TC4"],c:1,ex:"Additional-coverage order is TC1 (4 new reqs), TC3 (Req5-6), TC4 (Req2), and TC2 last because it adds no new requirement coverage."},
+{id:629,ch:5,cn:"Managing Test Activities",hard:true,q:"For a given risk, the risk level is $1,000 and the risk likelihood is estimated at 50%. What is the risk impact?",o:["$500","$2,000","$50,000","$200"],c:1,ex:"Risk level = likelihood x impact, so impact = level / likelihood = $1,000 / 0.5 = $2,000."},
+{id:630,ch:5,cn:"Managing Test Activities",hard:true,q:"You found a defect that crashes the system, but only after a person has made AND voided 10 purchases in a row. What is the proper priority and severity rating for this defect?",o:["Priority high, severity high","Priority high, severity low","Priority low, severity low","Priority low, severity high"],c:3,ex:"Because the trigger is rare, the priority is low, but a system crash is a high-severity effect on the system."},
+{id:631,ch:5,cn:"Managing Test Activities",hard:true,q:"For an ATDD hotel-floor story, you identified the partitions 0 | 1-floor full | overbooked, and you also want usability and performance checks. What should be the priority order for the tests you design?",o:["0, 1-floor full, overbooked, usability, performance","Performance, 1-floor full, usability, overbooked, 0","Usability, performance, overbooked, 0, 1-floor full","Overbooked, 0, 1-floor full, performance, usability"],c:0,ex:"Test valid partitions first (0, then floor full), then the invalid partition (overbooked), then non-functional tests (usability, performance)."},
+{id:632,ch:5,cn:"Managing Test Activities",hard:true,q:"Six test cases to run by risk priority as fast as possible: TC1 (30 min, low, depends on TC6), TC2 (10 min, medium, no dependency), TC3 (45 min, high, depends on TC1), TC4 (30 min, high, depends on TC2), TC5 (10 min, medium, depends on TC4), TC6 (15 min, low, depends on TC2). Which test case should be run FIRST?",o:["TC2","TC4","TC6","TC3"],c:0,ex:"TC2 has no dependency, is short, and unlocks the high-risk TC4, so it runs first; the full risk-based order is 2, 4, 5, 6, 1, 3."},
+{id:633,ch:2,cn:"Testing Throughout SDLC",hard:true,q:"Which types of failures fit which test levels BEST? 1. System behavior deviates from user business needs; 2. Failure in communication between components; 3. Failure in logic in the code; 4. Business rules not correctly implemented. Levels: A component testing, B component integration testing, C system testing, D acceptance testing.",o:["1D, 2B, 3A, 4C","1D, 2B, 3C, 4A","1B, 2A, 3D, 4C","1C, 2B, 3A, 4D"],c:0,ex:"Business-needs failures fit acceptance testing (1D), inter-component communication fits component integration (2B), code logic fits component testing (3A), and business rules fit system testing (4C)."},
+{id:634,ch:3,cn:"Static Testing",hard:true,q:"Given review tasks (1. select quality characteristics and exit criteria; 2. give everyone access to the work product; 3. identify anomalies; 4. discuss anomalies) and review activities (A individual review, B review initiation, C planning, D communication and analysis), which match is CORRECT?",o:["1B, 2C, 3D, 4A","1B, 2D, 3C, 4A","1C, 2A, 3B, 4D","1C, 2B, 3A, 4D"],c:3,ex:"Planning selects quality characteristics/exit criteria (1C), initiation gives access (2B), individual review identifies anomalies (3A), and communication/analysis discusses them (4D)."},
+{id:635,ch:3,cn:"Static Testing",hard:true,q:"Match review roles to responsibilities: 1. Scribe; 2. Review leader; 3. Facilitator; 4. Manager - and responsibilities A. ensures effective, safe review meetings; B. records decisions and new anomalies; C. decides what is reviewed and provides resources; D. takes overall responsibility for the review. Which match is CORRECT?",o:["1A, 2B, 3D, 4C","1A, 2C, 3B, 4D","1B, 2D, 3A, 4C","1B, 2D, 3C, 4A"],c:2,ex:"The scribe records information (1B), the review leader takes overall responsibility (2D), the facilitator runs safe and effective meetings (3A), and the manager decides scope and provides resources (4C)."},
+{id:636,ch:3,cn:"Static Testing",hard:true,q:"Put the review activities in the CORRECT sequence: 1. anomalies are discussed and their status/ownership decided; 2. defects are recorded and updates addressed; 3. reviewers apply techniques to spot anomalies; 4. the objective and schedule are established; 5. participants receive access to the item.",o:["4, 3, 5, 2, 1","4, 5, 3, 1, 2","5, 4, 1, 3, 2","5, 4, 3, 2, 1"],c:1,ex:"Correct review order is planning (4), review initiation/access (5), individual review (3), communication and analysis (1), then fixing and reporting (2)."},
+{id:637,ch:4,cn:"Test Analysis and Design",hard:true,q:"Match test tasks to test activities: 1. derive test cases from test conditions; 2. identify reusable testware; 3. organize test cases into test procedures; 4. evaluate the test basis and test object. Activities: A test analysis, B test design, C test implementation, D test completion.",o:["1B, 2A, 3D, 4C","1B, 2D, 3C, 4A","1C, 2A, 3B, 4D","1C, 2D, 3A, 4B"],c:1,ex:"Deriving test cases = test design (1B), identifying reusable testware = completion (2D), organizing procedures = implementation (3C), and evaluating the basis/object = analysis (4A)."},
+{id:638,ch:2,cn:"Testing Throughout SDLC",hard:true,q:"Map test categories to agile testing quadrants: 1. usability testing; 2. component testing; 3. functional testing; 4. reliability testing. Quadrants: A Q1 technology-facing/supporting the team, B Q2 business-facing/supporting the team, C Q3 business-facing/critique the product, D Q4 technology-facing/critique the product.",o:["1C, 2A, 3B, 4D","1D, 2A, 3C, 4B","1C, 2B, 3D, 4A","1D, 2B, 3C, 4A"],c:0,ex:"Usability fits Q3 (1C), component testing fits Q1 (2A), functional testing fits Q2 (3B), and reliability testing fits Q4 (4D)."},
+{id:639,ch:5,cn:"Managing Test Activities",hard:true,q:"Match risks to mitigation activities: 1. ineffective loop causes long responses; 2. consumers change their preferences; 3. flooding of the server room; 4. patients above a certain age get inaccurate reports. Mitigations: A risk acceptance, B performance efficiency testing, C boundary value analysis, D risk transfer.",o:["1C, 2D, 3A, 4B","1B, 2D, 3A, 4C","1B, 2A, 3D, 4C","1C, 2A, 3D, 4B"],c:2,ex:"Loop/response problems are mitigated by performance testing (1B), preference changes are accepted (2A), server-room flooding is transferred via insurance (3D), and inaccurate age-related reports are handled with boundary value analysis (4C)."},
+{id:640,ch:2,cn:"Testing Throughout SDLC",hard:true,q:"Which of the following BEST describes the way acceptance criteria can be documented?",o:["By performing retrospectives to determine the stakeholders' actual needs","Using the given/when/then format to describe an example test condition related to the user story","Using verbal communication to reduce the risk of misunderstanding the criteria","By documenting story risks in the test plan to facilitate risk-based testing"],c:1,ex:"Acceptance criteria are commonly documented with the given/when/then format to describe an example scenario the system must satisfy."},
+{id:641,ch:2,cn:"Testing Throughout SDLC",hard:true,q:"You are writing acceptance criteria for a story and decide to make a list of all the likely inputs to the code and the expected outputs for those inputs. What format are you using?",o:["An IPO chart","An acceptance-based format","A rules-oriented format","A behavior-driven format"],c:2,ex:"Listing inputs and expected outputs is a rules-oriented format; scenario-based given/when/then criteria are behavior-driven."},
+{id:642,ch:3,cn:"Static Testing",hard:true,q:"A defect report says a book could not be returned, but it lacks the details the developer needs to reproduce it quickly. What is MOST likely to help the developer?",o:["Adding which users and which books the failure affects","Filling in the missing Priority value","Adding memory dumps and database snapshots after each step in the steps to reproduce","Repeating the same test case in different environments"],c:0,ex:"The concrete affected users/books give the exact input data to reproduce the failure quickly. Priority does not help reproduction, and large attachments slow the analysis."},
+{id:643,ch:5,cn:"Managing Test Activities",hard:true,q:"Which of the following is considered a PROJECT risk rather than a product risk?",o:["Poor architecture of the software","Too long response time under load","Insufficient time allocated in the schedule for testing","Badly implemented business rules"],c:2,ex:"Scheduling and resourcing issues are project risks. Architecture, response time, and business-rule implementation all concern the product itself (product risks)."},
+{id:644,ch:5,cn:"Managing Test Activities",hard:true,q:"A risk analysis identified that report generation may be too slow (medium likelihood, high impact). In response, a team plans independent performance testing during system testing and alpha/beta testing with a sample of end users. What measure is this?",o:["Risk acceptance","A contingency plan","Risk mitigation","Risk transfer"],c:2,ex:"Taking concrete actions (independent performance testing, alpha/beta trials) to reduce the risk's effect is risk mitigation."},
+{id:645,ch:1,cn:"Fundamentals of Testing",hard:true,q:"A programmer, working under time pressure, writes a discount calculation that adds tax instead of subtracting it. A customer is later charged the wrong amount. Which statement is CORRECT?",o:["The time pressure is the failure","Charging the wrong amount is the error","The mistake in the code is a defect, and the wrong charge is a failure","The wrong amount is a defect and the code mistake is an error"],c:2,ex:"The programmer's mistake is an error (a human action producing an incorrect result) that creates a defect (flaw in the code); when the defect executes, the observed wrong charge is the failure."},
 ]
 
 
@@ -545,12 +598,47 @@ function shuffle(arr){
   return arr;
 }
 
+function isAnswered(i){
+  const a=userAnswers[i];
+  if(a===undefined) return false;
+  return Array.isArray(a)?a.length>0:true;
+}
+
+function answerStatus(q,ans){
+  if(ans===undefined||(Array.isArray(ans)&&ans.length===0)) return 'unanswered';
+  if(q.multi){
+    if(!Array.isArray(ans)||ans.length!==q.c.length) return 'incorrect';
+    const s=new Set(ans);
+    return q.c.every(x=>s.has(x))?'correct':'incorrect';
+  }
+  return ans===q.c?'correct':'incorrect';
+}
+
+function updateAnswer(qi,optIdx,checked){
+  const q=examQuestions[qi];
+  let ans=userAnswers[qi];
+  if(q.multi){
+    if(!Array.isArray(ans)) ans=[];
+    if(checked&&!ans.includes(optIdx)) ans.push(optIdx);
+    if(!checked) ans=ans.filter(x=>x!==optIdx);
+    if(ans.length===0) delete userAnswers[qi]; else userAnswers[qi]=ans;
+  }else{
+    if(checked) userAnswers[qi]=optIdx; else delete userAnswers[qi];
+  }
+}
+
 function shuffleQuestionOptions(q){
-  const indices=[0,1,2,3];
+  const n=q.o.length;
+  const indices=[...Array(n).keys()];
   shuffle(indices);
   const newOptions=indices.map(i=>q.o[i]);
-  const newCorrect=indices.indexOf(q.c);
-  return{...q,o:newOptions,c:newCorrect,_origOrder:indices};
+  let newCorrect;
+  if(q.multi){
+    newCorrect=q.c.map(orig=>indices.indexOf(orig));
+  }else{
+    newCorrect=indices.indexOf(q.c);
+  }
+  return{...q,o:newOptions,c:newCorrect};
 }
 
 function startExam(){
@@ -558,8 +646,13 @@ function startExam(){
   userAnswers={};
   currentQuestion=0;
   timeRemaining=3600;
-  const shuffled=shuffle([...QUESTION_BANK]);
-  examQuestions=shuffled.slice(0,60).map(shuffleQuestionOptions);
+  const multis=shuffle(QUESTION_BANK.filter(q=>q.multi));
+  const hards=shuffle(QUESTION_BANK.filter(q=>q.hard&&!q.multi));
+  const rest=shuffle(QUESTION_BANK.filter(q=>!q.multi&&!q.hard));
+  const chosenMultis=multis.slice(0,3);
+  const chosenHards=hards.slice(0,4);
+  const chosenRest=rest.slice(0,53);
+  examQuestions=shuffle([...chosenMultis,...chosenHards,...chosenRest]).map(shuffleQuestionOptions);
   document.getElementById('landing').style.display='none';
   document.getElementById('exam').style.display='block';
   document.getElementById('results').style.display='none';
@@ -584,24 +677,23 @@ function startTimer(){
 function renderQuestion(){
   const q=examQuestions[currentQuestion];
   document.getElementById('progress').textContent=`Question ${currentQuestion+1} / 60`;
-  document.getElementById('question-text').textContent=`Q${currentQuestion+1}. ${q.q}`;
+  document.getElementById('question-text').textContent=`Q${currentQuestion+1}. ${q.q}`+ (q.multi?'  (Select TWO options)':'');
   const container=document.getElementById('options-container');
   container.innerHTML='';
   q.o.forEach((opt,i)=>{
     const label=document.createElement('label');
-    const radio=document.createElement('input');
-    radio.type='radio';
-    radio.name='q'+currentQuestion;
-    radio.value=i;
-    if(userAnswers[currentQuestion]===i) radio.checked=true;
-    radio.addEventListener('change',()=>{userAnswers[currentQuestion]=i;renderPalette();});
-    label.appendChild(radio);
+    const input=document.createElement('input');
+    input.type=q.multi?'checkbox':'radio';
+    input.name='q'+currentQuestion;
+    input.value=i;
+    const ans=userAnswers[currentQuestion];
+    const sel=q.multi?(Array.isArray(ans)&&ans.includes(i)):ans===i;
+    if(sel) input.checked=true;
+    input.addEventListener('change',()=>{updateAnswer(currentQuestion,i,input.checked);renderPalette();});
+    label.appendChild(input);
     label.appendChild(document.createTextNode(' '+opt));
-    if(userAnswers[currentQuestion]===i) label.classList.add('selected');
+    if(sel) label.classList.add('selected');
     container.appendChild(label);
-  });
-  document.querySelectorAll('input[name="q'+currentQuestion+'"]').forEach(r=>{
-    r.addEventListener('change',()=>renderQuestion());
   });
 }
 
@@ -612,7 +704,7 @@ function renderPalette(){
     const btn=document.createElement('button');
     btn.className='palette-btn';
     btn.textContent=i+1;
-    if(userAnswers[i]!==undefined) btn.classList.add('answered');
+    if(isAnswered(i)) btn.classList.add('answered');
     if(i===currentQuestion) btn.classList.add('current');
     btn.addEventListener('click',()=>{currentQuestion=i;renderQuestion();renderPalette();togglePalette();});
     grid.appendChild(btn);
@@ -650,11 +742,10 @@ function submitExam(autoSubmit=false){
   for(let i=0;i<60;i++){
     const q=examQuestions[i];
     const ans=userAnswers[i];
-    let status='unanswered';
-    if(ans!==undefined){
-      if(ans===q.c){status='correct';correct++;}
-      else{status='incorrect';incorrect++;}
-    }else{unanswered++;}
+    const status=answerStatus(q,ans);
+    if(status==='correct') correct++;
+    else if(status==='incorrect') incorrect++;
+    else unanswered++;
     results.push({question:q,answer:ans,status,index:i});
   }
   const score=Math.round((correct/60)*100);
@@ -683,15 +774,21 @@ function renderReview(results,filter='all'){
   filtered.forEach(r=>{
     const div=document.createElement('div');
     div.className='review-item '+r.status;
+    const ans=r.answer;
     let optionsHtml='';
     r.question.o.forEach((opt,i)=>{
       let cls='';
-      if(i===r.question.c) cls='right';
-      else if(i===r.answer&&r.status==='incorrect') cls='wrong';
-      optionsHtml+=`<p class="${cls}">${opt}${i===r.question.c?' (Correct)':''}</p>`;
+      const isCorrectOpt=Array.isArray(r.question.c)?r.question.c.includes(i):i===r.question.c;
+      const wasSelected=Array.isArray(ans)?ans.includes(i):ans===i;
+      if(isCorrectOpt) cls='right';
+      else if(wasSelected) cls='wrong';
+      let suffix='';
+      if(isCorrectOpt) suffix=' (Correct)';
+      else if(wasSelected) suffix=' (Selected - incorrect)';
+      optionsHtml+=`<p class="${cls}">${opt}${suffix}</p>`;
     });
     div.innerHTML=`
-      <div class="review-q">Q${r.index+1}. ${r.question.q}</div>
+      <div class="review-q">Q${r.index+1}. ${r.question.q}${r.question.multi?'  [Select TWO]':''}</div>
       <div class="review-options">${optionsHtml}</div>
       <div class="review-explanation"><strong>Explanation:</strong> ${r.question.ex}</div>
     `;
@@ -706,18 +803,26 @@ function filterReview(filter,btn){
   for(let i=0;i<60;i++){
     const q=examQuestions[i];
     const ans=userAnswers[i];
-    let status='unanswered';
-    if(ans!==undefined){
-      if(ans===q.c) status='correct';
-      else status='incorrect';
-    }
+    const status=answerStatus(q,ans);
     results.push({question:q,answer:ans,status,index:i});
   }
   renderReview(results,filter);
 }
 
+function readHistory(){
+  try{
+    const data=localStorage.getItem('istqb_history');
+    if(!data) return [];
+    const parsed=JSON.parse(data);
+    return Array.isArray(parsed)?parsed:[];
+  }catch(e){
+    localStorage.removeItem('istqb_history');
+    return [];
+  }
+}
+
 function saveHistory(score,correct,incorrect,unanswered,timeUsed){
-  const history=JSON.parse(localStorage.getItem('istqb_history')||'[]');
+  const history=readHistory();
   history.unshift({
     date:new Date().toLocaleDateString(),
     time:new Date().toLocaleTimeString(),
@@ -728,7 +833,7 @@ function saveHistory(score,correct,incorrect,unanswered,timeUsed){
 }
 
 function renderHistory(){
-  const history=JSON.parse(localStorage.getItem('istqb_history')||'[]');
+  const history=readHistory();
   const el=document.getElementById('history-content');
   if(history.length===0){el.innerHTML='<p>No exam history yet.</p>';return;}
   let html='<table class="history-table"><tr><th>Date</th><th>Score</th><th>Correct</th><th>Incorrect</th><th>Time</th></tr>';
