@@ -62,10 +62,21 @@ A `vercel.json` is included so no configuration is needed.
 ```
 CTFL-Reviewer-Mock-Exam/
 ├── index.html      # Entire app (HTML + CSS + JS + question bank)
+├── verify.js       # Structural + length-balance checks (node verify.js)
 ├── vercel.json     # Vercel static deployment config
 ├── package.json    # Metadata (no runtime dependencies)
 └── README.md
 ```
+
+## Validation
+
+Run the automated checks any time the question bank changes:
+
+```bash
+node verify.js
+```
+
+It verifies: 414 questions, correct option counts (4 / 5 for multi-select), no duplicate options, valid correct indices, and that the correct answer is **not guessable by length** (fails if the correct option is the longest in more than 45% of questions).
 
 ## Question sources & accuracy
 
@@ -74,6 +85,7 @@ The question bank is:
 - **Based on** the official ISTQB CTFL v4.0 sample exams (Sets A–D and the ASTQB/AT*SQA practice exams) and the **ISTQB Foundation Level Syllabus v4.0**
 - **Original/rephrased** wording — no exam content is reproduced verbatim
 - **Fact-checked**: each answer and rationale was cross-checked against the official sample-exam answer keys and the syllabus
+- **Length-balanced**: options are written so the correct answer is not identifiable by length or phrasing (verified by `verify.js`)
 
 If you find an error, please open an issue — contributions that keep the pool accurate are welcome.
 
