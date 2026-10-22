@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "npx serve .",
     "build": "echo 'Static site - no build needed'",
-    "verify": "node verify.js"
+    "verify": "node verify.js",
+    "test": "node verify.js && node smoke.test.js"
   },
   "keywords": ["istqb", "ctfl", "software-testing", "certification", "mock-exam", "reviewer"],
   "license": "MIT"

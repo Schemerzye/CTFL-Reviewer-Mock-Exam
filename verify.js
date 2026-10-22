@@ -170,6 +170,136 @@ if (typeof ctx.answerStatus !== 'function' || typeof ctx.shuffleQuestionOptions 
   }
 }
 
+// ---------------------------------------------------------------------------
+// Answer-position balance: the correct answer must not be guessable by picking
+// the same option slot. Single-select items are spread over 4 slots, multi
+// items over the 10 possible slot pairs.
+// ---------------------------------------------------------------------------
+const singleSlots = [0, 0, 0, 0];
+const pairSlots = new Map();
+bank.forEach(q => {
+  if (q.multi) {
+    const key = q.c.slice().sort((a, b) => a - b).join(',');
+    pairSlots.set(key, (pairSlots.get(key) || 0) + 1);
+  } else {
+    singleSlots[q.c]++;
+  }
+});
+const singlesTotal = singleSlots.reduce((a, b) => a + b, 0);
+singleSlots.forEach((count, slot) => {
+  const share = count / singlesTotal;
+  if (share > 0.3) errors.push('correct answer in slot ' + slot + ' for ' + (share * 100).toFixed(1) + '% of single-select items (max 30%)');
+});
+pairSlots.forEach((count, key) => {
+  if (count > 6) errors.push('correct answer slot pair [' + key + '] used by ' + count + ' multi-select items (max 6)');
+});
+
+// ---------------------------------------------------------------------------
+// Regression guards for items corrected by a content audit. Each guard states
+// the syllabus fact the item depends on, so a later edit cannot silently
+// reintroduce the original error.
+// ---------------------------------------------------------------------------
+const bankById = new Map(bank.map(q => [q.id, q]));
+const keyedText = id => {
+  const q = bankById.get(id);
+  if (!q) return [];
+  return (Array.isArray(q.c) ? q.c : [q.c]).map(i => q.o[i]);
+};
+const hasKeyMatching = (id, re) => keyedText(id).some(t => re.test(t));
+
+const contentGuards = [
+  [11, /test activities/i, 'match', 'id 11: test process must be keyed to the test activities, not to test levels'],
+  [12, /can cause/i, 'match', 'id 12: defect must be keyed to the glossary wording "can cause ... to fail"'],
+  [34, /defect/i, 'match', 'id 34: the cause of a failure must be keyed to "defect"'],
+  [76, /absence-of-defects fallacy/i, 'match', 'id 76: must be keyed to the v4.0.1 principle name "absence-of-defects fallacy"'],
+  [282, /equivalence partitioning/i, 'match', 'id 282: the black-box technique must be keyed to equivalence partitioning'],
+  [321, /uninstall/i, 'match', 'id 321: installation testing must be keyed to the option that includes uninstallation'],
+  [330, /testware/i, 'match', 'id 330: test model must be keyed to the glossary wording "testware"'],
+  [508, /budget/i, 'nomatch', 'id 508: "the project budget runs out" must never be keyed as an exit criterion'],
+  [508, /coverage/i, 'match', 'id 508: a coverage target must be keyed as an exit criterion'],
+  [508, /fixed and closed/i, 'match', 'id 508: closed critical defects must be keyed as an exit criterion'],
+  [611, /^3$/, 'match', 'id 611: the drop-down scenario has exactly 3 partitions'],
+  [616, /Remove, Remove, Remove/, 'match', 'id 616: the key must cover all six valid transitions'],
+  [628, /^TC4$/, 'match', 'id 628: TC4 must be the last test executed'],
+  [708, /absence-of-defects fallacy/i, 'match', 'id 708: must use the v4.0.1 principle name "absence-of-defects fallacy"'],
+  [844, /without executing/i, 'match', 'id 844: the static analysis tool must be keyed'],
+  // second-audit fixes
+  [18, /test monitoring and control/i, 'match', 'id 18: the v4.0.1 activity list must be keyed, including test monitoring and control'],
+  [21, /consolidate/i, 'match', 'id 21: test completion must be keyed to consolidating experience/testware, not to exit criteria'],
+  [33, /prove that defects are absent/i, 'match', 'id 33: the only non-principle statement must be keyed'],
+  [35, /component integration/i, 'match', 'id 35: the v4.0.1 test level name must be keyed'],
+  [51, /archiving the testware/i, 'match', 'id 51: test closure must match the glossary wording'],
+  [61, /sequence of actions/i, 'match', 'id 61: test scenario must use the glossary definition'],
+  [77, /individual element/i, 'match', 'id 77: test item must use the glossary definition'],
+  [88, /mission statement/i, 'match', 'id 88: test charter must use the glossary definition'],
+  [92, /iterative/i, 'match', 'id 92: the iterative/incremental approach must be keyed'],
+  [139, /integrated into each/i, 'match', 'id 139: testing integrated into each stage must be keyed'],
+  [142, /concurrently/i, 'match', 'id 142: parallel testing must be keyed to concurrent execution'],
+  [153, /developer's test environment/i, 'match', 'id 153: alpha/beta must be keyed on the site, per the glossary'],
+  [191, /without executing/i, 'match', 'id 191: static analysis must be keyed to analysis without execution'],
+  [197, /on their own/i, 'match', 'id 197: individual review must be keyed to reviewers examining alone'],
+  [341, /control flow graph/i, 'match', 'id 341: path testing must be keyed to the control flow graph'],
+  [342, /true and false/i, 'match', 'id 342: condition coverage requires both true and false'],
+  [609, /^11, 12, 1111, 1234$/, 'match', 'id 609: the four-combination set must be keyed'],
+  [637, /^1A, 2B, 3C, 4D$/, 'match', 'id 637: the coverage-item mapping must be keyed'],
+  [706, /^Tests wear out$/, 'match', 'id 706: the v4.0.1 principle 5 name must be keyed'],
+  [774, /Deciding who will be involved/i, 'match', 'id 774: review leader duties must be one of the two keyed options'],
+  [800, /percentage/i, 'stemmatch', 'id 800: must ask for a percentage of planned test cases, not "coverage"'],
+  [826, /^A test environment$/, 'match', 'id 826: the term itself must be keyed, not a restatement of the stem'],
+  // explanations must not be letter-dependent and must not contradict a re-key
+  [190, /plans, facilitates, and tracks/i, 'exnomatch', 'id 190: the facilitator does not plan or track the review'],
+  [195, /^Walkthroughs are informal/i, 'exnomatch', 'id 195: walkthroughs are a distinct review type, not "informal"'],
+  [291, /branch coverage\)/i, 'stemnomatch', 'id 291: the stem must not equate decision coverage with branch coverage'],
+  [605, /set [a-e]\b/i, 'exnomatch', 'id 605: the explanation must not refer to a stale option letter'],
+  [606, /set [a-e]\b/i, 'exnomatch', 'id 606: the explanation must not refer to a stale option letter'],
+  [609, /^1, 123, 1111, 1234$/, 'nomatch', 'id 609: "1, 123, 1111, 1234" also covers all four combinations and must not be present']
+];
+contentGuards.forEach(([id, re, mode, msg]) => {
+  const q = bankById.get(id);
+  if (!q) { errors.push(msg + ' (item missing)'); return; }
+  if (mode === 'exnomatch') {
+    if (re.test(q.ex || '')) errors.push(msg);
+    return;
+  }
+  if (mode === 'stemnomatch') {
+    if (re.test(q.q || '')) errors.push(msg);
+    return;
+  }
+  if (mode === 'stemmatch') {
+    if (!re.test(q.q || '')) errors.push(msg);
+    return;
+  }
+  const matched = hasKeyMatching(id, re);
+  if (mode === 'match' && !matched) errors.push(msg);
+  if (mode === 'nomatch' && matched) errors.push(msg);
+});
+
+// Explanations must not depend on option letters (a permuted option list then
+// leaves the learner with a dangling reference).
+bank.forEach(q => {
+  if (/\b(set [a-e]|option [a-e]|answer [a-e]|choice [a-e])\b/i.test(q.ex || '')) {
+    errors.push('id ' + q.id + ': explanation refers to an option letter');
+  }
+});
+
+// No question may reproduce published official sample-exam wording.
+bank.forEach(q => {
+  if (/derive test cases from test conditions|identify reusable testware|organize test cases into test procedures|evaluate the test basis and test object/i.test(q.q || '')) {
+    errors.push('id ' + q.id + ': stem reproduces official sample-exam wording');
+  }
+});
+
+// Stale v3.1 terminology must not reappear.
+bank.forEach(q => {
+  if (/absence-of-errors/i.test(q.q + ' ' + q.o.join(' ') + ' ' + q.ex)) errors.push('id ' + q.id + ': uses the stale v3.1 term "absence-of-errors fallacy"');
+});
+
+// Expert items must reference a real syllabus section shape.
+bank.forEach(q => {
+  if (q.diff === 'expert' && !/^Syllabus \d\.\d/.test(q.ref || '')) errors.push('id ' + q.id + ': bad syllabus reference "' + q.ref + '"');
+});
+
+
 if (errors.length) {
   console.log('VERIFY FAILED (' + errors.length + '):');
   errors.forEach(e => console.log('  - ' + e));
