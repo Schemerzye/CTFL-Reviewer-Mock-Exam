@@ -246,6 +246,44 @@ const contentGuards = [
   [774, /Deciding who will be involved/i, 'match', 'id 774: review leader duties must be one of the two keyed options'],
   [800, /percentage/i, 'stemmatch', 'id 800: must ask for a percentage of planned test cases, not "coverage"'],
   [826, /^A test environment$/, 'match', 'id 826: the term itself must be keyed, not a restatement of the stem'],
+  // certainty pass: items whose old form had a second defensible option or
+  // asked about a term absent from the v4.0.1 syllabus
+  [9, /test monitoring and control/i, 'match', 'id 9: test management role must be keyed to its v4.0.1 activities'],
+  [19, /^Portability$/, 'match', 'id 19: portability must be keyed as the ISO 25010 characteristic'],
+  [55, /Measuring the test process/i, 'match', 'id 55: test process improvement must be keyed to measurement'],
+  [59, /29119-3/, 'match', 'id 59: ISO/IEC/IEEE 29119-3 must be the keyed documentation standard'],
+  [64, /process oriented/i, 'match', 'id 64: QA process-oriented vs testing product-oriented must be keyed'],
+  [81, /invalid date is the error/i, 'match', 'id 81: the error/defect/failure mapping must be keyed'],
+  [86, /scope, approach, resources and schedule/i, 'match', 'id 86: test planning purpose must be keyed'],
+  [219, /anomalies found per page/i, 'match', 'id 219: the syllabus review metric must be keyed'],
+  [228, /review report listing the anomalies/i, 'match', 'id 228: the review output must be keyed'],
+  [286, /^State transition testing$/, 'match', 'id 286: state transition testing must be keyed as the syllabus black-box technique'],
+  [297, /behaves correctly for valid input/i, 'match', 'id 297: positive testing must be keyed'],
+  [299, /difficulty of deriving the expected results/i, 'match', 'id 299: the oracle problem must be keyed'],
+  [307, /requirements, design documents and architecture/i, 'match', 'id 307: the test basis must be keyed'],
+  [312, /underlying cause of a defect/i, 'match', 'id 312: root cause analysis purpose must be keyed'],
+  [313, /coverage items that must be reached/i, 'match', 'id 313: coverage criteria purpose must be keyed'],
+  [322, /Deliberately adding defects/i, 'match', 'id 322: fault injection must be keyed'],
+  [343, /^Each executable statement/, 'match', 'id 343: statement testing coverage item must be keyed'],
+  [345, /white-box technique that analyses how variables/i, 'match', 'id 345: data flow testing must be keyed'],
+  [349, /^Each outcome of each decision/, 'match', 'id 349: decision testing coverage item must be keyed'],
+  [350, /existing version of the system or an expert/i, 'match', 'id 350: expected-results sources must be keyed'],
+  [352, /^Testing is context dependent$/, 'match', 'id 352: the context-dependence principle must be keyed'],
+  [356, /ambiguous and can be read in two/i, 'match', 'id 356: an ambiguous requirement must be keyed'],
+  [357, /minimum and maximum values of each partition/i, 'match', 'id 357: BVA boundary values must be keyed'],
+  [358, /^A transition between two states/i, 'match', 'id 358: a transition must be keyed as the coverage item'],
+  [360, /one value per partition suffices/i, 'match', 'id 360: EP reduction must be keyed'],
+  [414, /replace the need for test design/i, 'match', 'id 414: tool-automation over-expectation must be keyed as the risk'],
+  [719, /^Non-functional testing$/, 'match', 'id 719: non-functional testing must be keyed as the syllabus test type'],
+  [787, /^Two$/, 'match', 'id 787: two tests are the minimum for 100 percent decision testing'],
+  [841, /fits the existing processes/i, 'match', 'id 841: tool evaluation must be keyed'],
+  [856, /incrementally/i, 'match', 'id 856: incremental tool introduction must be keyed'],
+  // removed terms must not creep back into the bank as question stems
+  ...['IEEE 829', 'fault masking', 'feasibility study', 'cycle time', 'trip report',
+      'happy path', "a 'feature list'", 'causal chain', 'test adequacy', 'mutation testing',
+      'loop testing', 'basis path', 'MC/DC', 'context-driven', 'requirement validation',
+      'boundary analysis', 'state-based testing', 'workflow testing', 'tool pilot']
+      .map(term => [0, new RegExp(term, 'i'), 'absent', 'non-syllabus term "' + term + '" must not appear as a question stem']),
   // explanations must not be letter-dependent and must not contradict a re-key
   [190, /plans, facilitates, and tracks/i, 'exnomatch', 'id 190: the facilitator does not plan or track the review'],
   [195, /^Walkthroughs are informal/i, 'exnomatch', 'id 195: walkthroughs are a distinct review type, not "informal"'],
@@ -255,6 +293,11 @@ const contentGuards = [
   [609, /^1, 123, 1111, 1234$/, 'nomatch', 'id 609: "1, 123, 1111, 1234" also covers all four combinations and must not be present']
 ];
 contentGuards.forEach(([id, re, mode, msg]) => {
+  // The 'absent' mode is bank-wide, so it needs no particular item.
+  if (mode === 'absent') {
+    if (bank.some(q => re.test(q.q || ''))) errors.push(msg);
+    return;
+  }
   const q = bankById.get(id);
   if (!q) { errors.push(msg + ' (item missing)'); return; }
   if (mode === 'exnomatch') {
