@@ -6,26 +6,33 @@ No account, no install, no tracking. Open the page and start practicing.
 
 ## Features
 
-- **414-question pool** across all six syllabus chapters (Fundamentals, SDLC, Static Testing, Test Analysis & Design, Managing Test Activities, Tool Support)
-- **Easy to hardest mix** — from definitions to application-level (K3) calculation questions, the kind you see on the real exam
-- **"Select TWO" questions** — checkbox questions that require both correct answers, exactly like the official exam
-- **Randomized exams** — every attempt pulls a different set of 60 questions and shuffles the answer options, so retakes are meaningful
-- **Guaranteed mix per exam** — each 60-question session always includes 3 multi-select and 4 hard questions (plus 53 randomized)
+- **574-question pool**: 414 current questions plus 160 new expert-level scenarios across all six syllabus chapters
+- **120-level challenge mode**: every 60-question exam mixes **30 current hard/Select TWO questions** with **30 new expert questions**
+- **8 "Select TWO" questions** per exam, like the official sample exams
 - **60-minute countdown timer** with auto-submit, like the real exam
-- **Question palette** — jump to any question and see which ones you've answered
-- **Instant results** — score, PASS/FAIL (65% threshold, 39/60), correct/incorrect/unanswered breakdown
+- **Official chapter proportions**: 12 Fundamentals, 9 SDLC, 6 Static Testing, 17 Test Analysis & Design, 13 Managing Test Activities, 3 Tool Support
+- **Question palette** — jump to any question and see which ones you have answered
+- **Instant results** — score, PASS/FAIL (60% threshold, 36/60), correct/incorrect/unanswered breakdown, and per-chapter accuracy
 - **Full review with explanations** — every question shows the correct answer and a rationale, with filters (All / Correct / Incorrect / Unanswered)
 - **Score history** — your last 10 attempts saved locally in your browser
 - **Mobile-friendly**
 
-## Exam format (matching the real certification)
+## Exam format
 
 | Item | Value |
 |---|---|
-| Questions per exam | 40 real / 60 in this simulator |
-| Time limit | 60 minutes (75 if English is not your first language) |
-| Passing score | 65% (26/40 real) |
+| Questions per exam | 60 |
+| Time limit | 60 minutes |
+| Passing score | 60% (36/60) |
+| Question mix | 30 current hard/Select TWO + 30 new expert |
 | Question types | Single-select + "Select TWO" |
+| Select TWO count | 8 |
+
+## Difficulty calibration
+
+The exam is designed to be harder than the real CTFL foundation exam: it uses multi-step scenarios, close distractors, calculation items, and very few recall-only questions. "120-level" is a design target for reasoning load, not a literal IQ score. A real IQ mapping would require norming data that this project does not have.
+
+The chapter mix follows the official CTFL proportions scaled to 60 questions. The K-level mix is intentionally K2/K3-heavy, with almost no K1 recall items.
 
 ## Getting started
 
@@ -62,7 +69,7 @@ A `vercel.json` is included so no configuration is needed.
 ```
 CTFL-Reviewer-Mock-Exam/
 ├── index.html      # Entire app (HTML + CSS + JS + question bank)
-├── verify.js       # Structural + length-balance checks (node verify.js)
+├── verify.js       # Structural, pool-composition, and exam-builder checks
 ├── vercel.json     # Vercel static deployment config
 ├── package.json    # Metadata (no runtime dependencies)
 └── README.md
@@ -76,7 +83,16 @@ Run the automated checks any time the question bank changes:
 node verify.js
 ```
 
-It verifies: 414 questions, correct option counts (4 / 5 for multi-select), no duplicate options, valid correct indices, and that the correct answer is **not guessable by length** (fails if the correct option is the longest in more than 45% of questions).
+It verifies:
+
+- 574 total questions and valid option counts (4 single-select, 5 multi-select)
+- No duplicate IDs, question stems, or option text
+- Correct indices in range; every Select TWO item has exactly two answers
+- Expert items have a K-level and a syllabus reference
+- No banned option phrases such as "all of the above"
+- The correct answer is not guessable by length (global threshold plus a per-item 1.5x check)
+- The 120 pool has enough current and new items per chapter
+- **1,000 simulated exam builds**: always 60 unique questions, the 30/30 mix, 8 Select TWO, correct chapter quotas, and no easy current items
 
 ## Question sources & accuracy
 
